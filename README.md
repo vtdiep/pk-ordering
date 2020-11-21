@@ -73,3 +73,13 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
   Nest is [MIT licensed](LICENSE).
+
+---
+
+## Important Notes / Known Issues
+- Change the default ports! <br/>
+Both nestjs and CRA use port 3000 as the default. Interestingly, both can be run at the same time if CRA is launched before nestjs. It seems as though nestjs(express/node) binds to all/any available interfaces, according to [this](https://github.com/expressjs/express/issues/3952). So what seems to be happening is that CRA binds to localhost and the ipv4 address first, and then nestjs binds to ipv6. It should be noted that CRA complains if nestjs is launched first, followed by CRA.
+
+- SKIP_PREFLIGHT_CHECK=true <br/>
+The nestjs cli commands use versions of jest, eslint, etc that are newer than the version that CRA is using; This .env variable should be set in the CRA folder to stop CRA from complaining.<br/>
+Issue source: [related issue](https://github.com/facebook/create-react-app/issues/6390) [orig. issue](https://github.com/facebook/create-react-app/issues/1795)
