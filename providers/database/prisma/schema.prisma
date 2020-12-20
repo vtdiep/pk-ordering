@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  category_id     Int               @id @default(autoincrement())
+  name            String?
+  description     String?
+  active          Boolean           @default(true)
+  private_note    String?
+  category_X_item category_X_item[]
+  menu_X_category menu_X_category[]
+}
+
+model category_X_item {
+  category_id   Int
+  item_id       Int
+  display_order Int
+  category      category @relation(fields: [category_id], references: [category_id])
+  item          item     @relation(fields: [item_id], references: [item_id])
+
+  @@id([category_id, item_id])
+}
+
+model item {
+  item_id         Int               @id @default(autoincrement())
+  name            String
+  description     String?
+  active          Boolean           @default(true)
+  is_standalone   Boolean           @default(false)
+  price           Float?
+  private_note    String?
+  category_X_item category_X_item[]
+  item_X_modgroup item_X_modgroup[]
+  modgroup_item   modgroup_item[]
+
+  @@unique([item_id, is_standalone], name: "item_id_standalone_uq")
+}
+
+model item_X_modgroup {
+  item_id       Int
+  mod_id        Int
+  is_standalone Boolean  @default(false)
+  display_order Int
+  item          item     @relation(fields: [item_id, is_standalone], references: [item_id, is_standalone])
+  modgroup      modgroup @relation(fields: [mod_id], references: [mod_id])
+
+  @@id([item_id, mod_id])
+}
+
+model menu {
+  menu_id         Int               @id @default(autoincrement())
+  name            String?
+  display_order   Int
+  active          Boolean           @default(true)
+  description     String?
+  private_note    String?
+  menu_X_category menu_X_category[]
+}
+
+model menu_X_category {
+  category_id_category Int
+  menu_id_menu         Int
+  display_order        Int
+  category             category @relation(fields: [category_id_category], references: [category_id])
+  menu                 menu     @relation(fields: [menu_id_menu], references: [menu_id])
+
+  @@id([category_id_category, menu_id_menu])
+}
+
+model modgroup {
+  mod_id             Int               @id @default(autoincrement())
+  name               String
+  required_selection Int
+  max_selection      Int
+  max_single_select  Int
+  free_selection     Int
+  price              Float             @default(0)
+  description        String?
+  private_note       String?
+  item_X_modgroup    item_X_modgroup[]
+  modgroup_item      modgroup_item[]
+}
+
+model modgroup_item {
+  modgroup_item_id   Int      @id @default(autoincrement())
+  mod_id             Int
+  item_id            Int
+  item_is_standalone Boolean  @default(false)
+  price              Float?
+  display_order      Int
+  item               item     @relation(fields: [item_id, item_is_standalone], references: [item_id, is_standalone])
+  modgroup           modgroup @relation(fields: [mod_id], references: [mod_id])
+
+  @@unique([mod_id, item_id], name: "modgroup_item_uq_mod_id_item_id")
+}
+
+model order {
+  oid               Int          @id @default(autoincrement())
+  email             String
+  name              String
+  phone             String?
+  transaction_token String?
+  time_placed       DateTime     @default(now())
+  time_accepted     DateTime?
+  pickup_time       DateTime
+  amount_paid       Float
+  tax               Float
+  status            order_status @default(NEW)
+  details           Json
+}
+
+enum order_status {
+  NEW
+  ACCEPTED
+  FULFILLED
+  CANCELLED
+}
