@@ -83,3 +83,9 @@ Both nestjs and CRA use port 3000 as the default. Interestingly, both can be run
 - SKIP_PREFLIGHT_CHECK=true <br/>
 The nestjs cli commands use versions of jest, eslint, etc that are newer than the version that CRA is using; This .env variable should be set in the CRA folder to stop CRA from complaining.<br/>
 Issue source: [related issue](https://github.com/facebook/create-react-app/issues/6390) [orig. issue](https://github.com/facebook/create-react-app/issues/1795)
+
+## When schema on database changes
+```bash
+- npx prisma introspect
+- npx prisma generate
+```
