@@ -3,13 +3,14 @@ import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { order } from '@prisma/client';
+import { ValidatorPipe } from './pipes/validator.pipe';
 
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  async create(@Body() createOrderDto: CreateOrderDto) {
+  async create(@Body(ValidatorPipe) createOrderDto: CreateOrderDto) {
     let result: order;
     try {
       result = await this.orderService.create(createOrderDto);
