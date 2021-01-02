@@ -1,10 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { PrismaService } from 'providers/database/prisma/prisma.service';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaService } from 'src/common/database/prisma/prisma.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {
+  }
   
   async create(createOrderDto: Prisma.orderCreateInput) {
     return this.prisma.order.create({
