@@ -1,7 +1,8 @@
 // import { PartialType } from '@nestjs/mapped-types';
-import { Prisma } from '@prisma/client';
+import { order_status, Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsEmail, IsOptional, IsPhoneNumber, IsDateString, IsNumber, Min, IsIn, IsJSON } from 'class-validator';
+import { IsEmail, IsOptional, IsPhoneNumber, IsDateString, IsNumber, Min, IsIn, IsJSON, ValidateNested, IsNotEmpty, IsString } from 'class-validator';
+import { OrderDetailDto } from './order-details.dto';
 
 // export class UpdateOrderDto extends PartialType(CreateOrderDto) {}
 
@@ -11,6 +12,8 @@ export class UpdateOrderDto implements Prisma.orderUpdateInput {
     email: string;
 
     @IsOptional()
+    @IsString()
+    @IsNotEmpty()
     name: string;
 
     @IsOptional()
@@ -46,11 +49,12 @@ export class UpdateOrderDto implements Prisma.orderUpdateInput {
     tax: number;
     
     @IsOptional()
-    @IsIn(['NEW' , 'ACCEPTED' , 'FULFILLED' , 'CANCELLED'])
-    status?: 'NEW' | 'ACCEPTED' | 'FULFILLED' | 'CANCELLED';
+    @IsIn( Object.values(order_status))
+    status?: order_status;
     
     @IsOptional()
-    @Type(() => String)
-    @IsJSON()
-    details: Prisma.InputJsonValue;
+    @ValidateNested({each: true})
+    @Type( () => OrderDetailDto)
+    @IsNotEmpty()
+    details: OrderDetailDto;
 }

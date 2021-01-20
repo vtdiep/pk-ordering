@@ -1,12 +1,15 @@
-import { Prisma } from '@prisma/client';
-import { Type } from 'class-transformer';
-import { IsEmail, IsPhoneNumber, IsDateString, IsJSON, IsOptional, IsIn, IsNumber, Min } from 'class-validator';
+import { order_status, Prisma } from '@prisma/client';
+import { Transform, Type } from 'class-transformer';
+import { IsEmail, IsPhoneNumber, IsDateString, IsJSON, IsOptional, IsIn, IsNumber, Min, ValidateNested, IsNotEmpty, IsString } from 'class-validator';
+import { OrderDetailDto } from './order-details.dto';
 
 export class CreateOrderDto implements Prisma.orderCreateInput {
 
     @IsEmail()
     email: string;
 
+    @IsString()
+    @IsNotEmpty()
     name: string;
 
     @IsOptional()
@@ -39,10 +42,11 @@ export class CreateOrderDto implements Prisma.orderCreateInput {
     tax: number;
     
     @IsOptional()
-    @IsIn(['NEW' , 'ACCEPTED' , 'FULFILLED' , 'CANCELLED'])
-    status?: 'NEW' | 'ACCEPTED' | 'FULFILLED' | 'CANCELLED';
+    @IsIn( Object.values(order_status))
+    status?: order_status;
     
-    @Type(() => String)
-    @IsJSON()
-    details: Prisma.InputJsonValue;
+    @ValidateNested({each: true})
+    @Type( () => OrderDetailDto)
+    @IsNotEmpty()
+    details: OrderDetailDto;
 }
