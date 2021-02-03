@@ -43,12 +43,12 @@ model item {
 }
 
 model item_X_modgroup {
-  item_id       Int
-  mod_id        Int
-  is_standalone Boolean  @default(false)
-  display_order Int
-  item          item     @relation(fields: [item_id, is_standalone], references: [item_id, is_standalone])
-  modgroup      modgroup @relation(fields: [mod_id], references: [mod_id])
+  item_id            Int
+  mod_id             Int
+  item_is_standalone Boolean  @default(false)
+  display_order      Int
+  item               item     @relation(fields: [item_id, item_is_standalone], references: [item_id, is_standalone])
+  modgroup           modgroup @relation(fields: [mod_id], references: [mod_id])
 
   @@id([item_id, mod_id])
 }
