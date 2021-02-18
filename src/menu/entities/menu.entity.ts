@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { Type } from "class-transformer";
-import { IsBoolean, IsInt, IsString, Min } from "class-validator";
+import { IsBoolean, IsInt, IsNotEmpty, IsString, Min } from "class-validator";
 import { OnlyPrimitives } from "src/utils/types/only-primitives";
 
 export abstract class Menu_abstract implements OnlyPrimitives<Prisma.menuUncheckedCreateInput>{
@@ -10,6 +10,7 @@ export abstract class Menu_abstract implements OnlyPrimitives<Prisma.menuUncheck
     abstract menu_id?: number;
     
     @IsString()
+    @IsNotEmpty()
     abstract name?: string;
 
     @Type(() => Number)
