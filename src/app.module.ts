@@ -3,9 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { OrderModule } from './order/order.module';
 import { MenuModule } from './menu/menu.module';
+import { CategoryModule } from './category/category.module';
+import { ItemModule } from './item/item.module';
+import { ModgroupModule } from './modgroup/modgroup.module';
 
 @Module({
-  imports: [OrderModule, MenuModule],
+  imports: [OrderModule, MenuModule, CategoryModule, ItemModule, ModgroupModule],
   controllers: [AppController],
   providers: [AppService],
 })
