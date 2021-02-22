@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
+import { KNEX_CONNECTION } from '../../../common/constants';
 import { KnexService } from './knex.service';
 
 @Module({
     imports: [],
     controllers: [],
-    providers: [{provide:'Knex', useFactory: async knexService => {
-        let k =  new KnexService();
-        let l = await k.get_knex()
-        return l
+    providers: [KnexService, {provide:KNEX_CONNECTION, useFactory: async knexService => {
+        return knexService.get_knex()
       },
+      inject: [KnexService]
     }],
-    exports: ['Knex']
+    exports: [KNEX_CONNECTION]
 })
 export class KnexModule {}

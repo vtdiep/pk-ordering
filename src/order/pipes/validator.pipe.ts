@@ -1,6 +1,7 @@
 import { ArgumentMetadata, Inject, Injectable, PipeTransform } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import Knex from 'knex';
+import { KNEX_CONNECTION } from '../../common/constants';
 import { KnexService } from 'src/common/database/knex/knex.service';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { OrderDetailDto } from '../dto/order-details.dto';
@@ -8,7 +9,7 @@ import { OrderDetailDto } from '../dto/order-details.dto';
 @Injectable()
 export class ValidatorPipe implements PipeTransform {
 
-constructor(@Inject('Knex') private knex:Knex){}
+constructor(@Inject(KNEX_CONNECTION) private knex:Knex){}
 
   async transform(value: CreateOrderDto, metadata: ArgumentMetadata) {
 
