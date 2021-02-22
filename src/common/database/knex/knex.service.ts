@@ -24,8 +24,11 @@ export class KnexService implements OnModuleInit, OnModuleDestroy{
         // throw new Error('Method not implemented.');
     }
 
-    knex(){
-        return this._knex;
+    get_knex(){
+        if(!this._knex){
+            this._knex = Knex(config)
+        }
+        return this._knex
     }
 }
 
