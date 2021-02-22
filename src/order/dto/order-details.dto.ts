@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { Type } from "class-transformer";
-import { ValidateNested, IsArray, IsNotEmpty, IsNumber, IsInt, Min } from "class-validator";
+import { ValidateNested, IsArray, IsNotEmpty, IsNumber, IsInt, Min, IsString, isNotEmpty } from "class-validator";
 
 export class OrderDetailDto implements Prisma.JsonObject{
     [x: string]: Prisma.JsonValue;
@@ -18,6 +18,10 @@ class Item implements Prisma.JsonObject{
     @IsInt()
     @Type(()=>Number)
     id: number;
+
+    @IsString()
+    @IsNotEmpty()
+    name: string;
 
     @IsNumber({maxDecimalPlaces:2})
     @Type(()=>Number)
