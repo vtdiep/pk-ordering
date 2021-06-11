@@ -5,20 +5,19 @@ import { OnlyPrimitives } from 'src/utils/types/only-primitives';
 import { Menu, Menu_abstract } from '../entities/menu.entity';
 import { CreateMenuDto } from './create-menu.dto';
 
-export class UpdateMenuDto extends PartialType(Menu){
+export class UpdateMenuDto extends PartialType(Menu) {
+  @IsOptional()
+  name?: string;
 
-    @IsOptional()
-    name?: string;
+  @IsOptional()
+  display_order?: number;
 
-    @IsOptional()
-    display_order?: number;
+  @IsOptional()
+  active?: boolean;
 
-    @IsOptional()
-    active?: boolean;
+  @IsOptional()
+  description?: string;
 
-    @IsOptional()
-    description?: string;
-
-    @IsOptional()
-    private_note?: string;
+  @IsOptional()
+  private_note?: string;
 }

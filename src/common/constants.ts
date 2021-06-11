@@ -1,1 +1,1 @@
-export const KNEX_CONNECTION = 'Knex'
+export const KNEX_CONNECTION = 'Knex';

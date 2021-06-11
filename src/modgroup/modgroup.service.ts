@@ -5,14 +5,12 @@ import { PrismaService } from 'src/common/database/prisma/prisma.service';
 
 @Injectable()
 export class ModgroupService {
-  constructor(private prisma: PrismaService){
-
-  }
+  constructor(private prisma: PrismaService) {}
 
   create(createModgroupDto: Prisma.modgroupCreateInput) {
     return this.prisma.modgroup.create({
-      data: createModgroupDto
-    })
+      data: createModgroupDto,
+    });
   }
 
   findAll() {
@@ -22,25 +20,25 @@ export class ModgroupService {
   findOne(id: number) {
     return this.prisma.modgroup.findUnique({
       where: {
-        mod_id: id
-      }
+        mod_id: id,
+      },
     });
   }
 
   update(id: number, updateModgroupDto: Prisma.modgroupUpdateInput) {
     return this.prisma.modgroup.update({
       where: {
-        mod_id: id
+        mod_id: id,
       },
-      data: updateModgroupDto
+      data: updateModgroupDto,
     });
   }
 
   remove(id: number) {
     return this.prisma.modgroup.delete({
       where: {
-        mod_id: id
-      }
+        mod_id: id,
+      },
     });
   }
 }

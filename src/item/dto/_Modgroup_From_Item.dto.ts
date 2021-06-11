@@ -10,16 +10,17 @@ import { Modgroup } from 'src/modgroup/entities/modgroup.entity';
 import { OnlyPrimitives } from 'src/utils/types/only-primitives';
 
 export class _Modgroup_From_Item_Dto {
+  @ValidateNested()
+  @Type(() => CreateModgroupDto)
+  create?: OnlyPrimitives<CreateModgroupDto>;
 
-    @ValidateNested()
-    @Type(() => CreateModgroupDto)
-    create?: OnlyPrimitives<CreateModgroupDto>;
+  @ValidateNested()
+  @Type(() => PickType(Modgroup, ['mod_id'] as const))
+  link?: Required<Pick<Category, 'category_id'>>;
 
-    @ValidateNested()
-    @Type(() => PickType(Modgroup, ["mod_id"] as const))
-    link?: Required<Pick<Category, "category_id">>;
-
-    @ValidateNested()
-    @Type(() => PickType(Item_X_Modgroup, ["display_order","item_is_standalone"] as const))
-    join_details: Pick<Item_X_Modgroup, "display_order" | "item_is_standalone">;
+  @ValidateNested()
+  @Type(() =>
+    PickType(Item_X_Modgroup, ['display_order', 'item_is_standalone'] as const),
+  )
+  join_details: Pick<Item_X_Modgroup, 'display_order' | 'item_is_standalone'>;
 }

@@ -13,11 +13,10 @@ describe('OrderService', () => {
         OrderService,
         {
           provide: PrismaService,
-          useValue: mockedPrismaService
-        }
+          useValue: mockedPrismaService,
+        },
       ],
-    })
-    .compile();
+    }).compile();
 
     service = module.get<OrderService>(OrderService);
   });
@@ -34,19 +33,15 @@ describe('OrderService', () => {
     // If we want to test the db call, then we should do it in integration testing
     // If orderService did something more than a db call, then it would be worth testing here
     // with a mock/stub for the db call, so that we can verify that orderService actually did something to the db call result
-      const orderDTO: CreateOrderDto = {
-        email: "red@gmail.com",
-        name: "Red Color",
-        pickup_time: new Date(),
-        amount_paid: 10.01,
-        tax: 0.01,
-        details: {}
-      } 
-      const newOrder = await service.create(orderDTO)
-      expect(newOrder).not.toBe({
-        
-      })
-
-
-    });
+    const orderDTO: CreateOrderDto = {
+      email: 'red@gmail.com',
+      name: 'Red Color',
+      pickup_time: new Date(),
+      amount_paid: 10.01,
+      tax: 0.01,
+      details: {},
+    };
+    const newOrder = await service.create(orderDTO);
+    expect(newOrder).not.toBe({});
+  });
 });

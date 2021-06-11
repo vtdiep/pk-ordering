@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -43,7 +51,10 @@ export class OrderController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateOrderDto: UpdateOrderDto,
+  ) {
     let result: order;
     try {
       result = await this.orderService.update(+id, updateOrderDto);
@@ -60,7 +71,7 @@ export class OrderController {
       result = await this.orderService.remove(+id);
     } catch (error) {
       return error;
-    } 
+    }
     return result;
   }
 }

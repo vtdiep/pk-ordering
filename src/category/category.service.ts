@@ -6,14 +6,12 @@ import { PrismaService } from '../common/database/prisma/prisma.service';
 
 @Injectable()
 export class CategoryService {
-  constructor(private prisma: PrismaService){
-
-  }
+  constructor(private prisma: PrismaService) {}
 
   create(createCategoryDto: Prisma.categoryCreateInput) {
     return this.prisma.category.create({
-      data: createCategoryDto
-    })
+      data: createCategoryDto,
+    });
   }
 
   findAll() {
@@ -23,25 +21,25 @@ export class CategoryService {
   findOne(id: number) {
     return this.prisma.category.findUnique({
       where: {
-        category_id: id
-      }
+        category_id: id,
+      },
     });
   }
 
   update(id: number, updateCategoryDto: Prisma.categoryUpdateInput) {
     return this.prisma.category.update({
       where: {
-        category_id: id
+        category_id: id,
       },
-      data: updateCategoryDto
+      data: updateCategoryDto,
     });
   }
 
   remove(id: number) {
     return this.prisma.category.delete({
       where: {
-        category_id: id
-      }
+        category_id: id,
+      },
     });
   }
 }

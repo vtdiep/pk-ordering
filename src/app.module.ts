@@ -10,7 +10,15 @@ import { MenuXCategoryModule } from './menu-x-category/menu-x-category.module';
 import { CategoryXItemModule } from './category-x-item/category-x-item.module';
 
 @Module({
-  imports: [OrderModule, MenuModule, CategoryModule, ItemModule, ModgroupModule, MenuXCategoryModule, CategoryXItemModule],
+  imports: [
+    OrderModule,
+    MenuModule,
+    CategoryModule,
+    ItemModule,
+    ModgroupModule,
+    MenuXCategoryModule,
+    CategoryXItemModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -1,7 +1,5 @@
-import { BadRequestException } from "@nestjs/common/exceptions";
-import { TransformationType, TransformFnParams } from "class-transformer";
-
-
+import { BadRequestException } from '@nestjs/common/exceptions';
+import { TransformationType, TransformFnParams } from 'class-transformer';
 
 /**
  * Replacement for @Type(()=>Boolean) decorator  
@@ -25,30 +23,32 @@ import { TransformationType, TransformFnParams } from "class-transformer";
 
   @todo Replace with https://github.com/typestack/class-transformer/issues/550
  */
-export function ToBooleanFromString(){
-    return (params: TransformFnParams) => {
-      let {key, obj, type, value}: {value: any, key: string, obj: any, type: TransformationType}  = params
-      console.log(value);console.log(obj);
-      console.log(this)
-      
-      
-        if ( (typeof(value) == 'string' && ['true', 'false'].includes(value)) ){
-          console.log('y');
-          console.log(value);
-          
-          
-            return value == 'false' ? false : true
-            // Note that Boolean("false") == true
-        }
-        if ( typeof(value) == 'boolean'){
-            return value
-        }
-        throw new BadRequestException({
-            "statusCode": 400,
-            "message": [
-              `${key} must be a boolean value`
-            ],
-            "error": "Bad Request"
-          })
+export function ToBooleanFromString() {
+  return (params: TransformFnParams) => {
+    let {
+      key,
+      obj,
+      type,
+      value,
+    }: { value: any; key: string; obj: any; type: TransformationType } = params;
+    console.log(value);
+    console.log(obj);
+    console.log(this);
+
+    if (typeof value == 'string' && ['true', 'false'].includes(value)) {
+      console.log('y');
+      console.log(value);
+
+      return value == 'false' ? false : true;
+      // Note that Boolean("false") == true
     }
+    if (typeof value == 'boolean') {
+      return value;
+    }
+    throw new BadRequestException({
+      statusCode: 400,
+      message: [`${key} must be a boolean value`],
+      error: 'Bad Request',
+    });
+  };
 }
