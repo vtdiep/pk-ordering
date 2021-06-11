@@ -29,6 +29,7 @@
     "@prisma/client": "^2.17.0",
     "class-transformer": "^0.3.2",
     "class-validator": "^0.13.1",
+    "dotenv": "^8.2.0",
     "knex": "^0.21.18",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
