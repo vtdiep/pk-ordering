@@ -19,7 +19,10 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
-    'linebreak-style': ["error", "windows"],
-    "import/prefer-default-export": "off",
+    'linebreak-style': ['error', 'windows'],
+    "import/prefer-default-export": 'off',
+    'class-methods-use-this': 'off',
+    'prefer-const': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
   },
 };
