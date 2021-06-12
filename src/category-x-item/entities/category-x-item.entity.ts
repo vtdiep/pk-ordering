@@ -23,6 +23,8 @@ abstract class Category_X_Item_abstract
 
 export class Category_X_Item extends Category_X_Item_abstract {
   category_id: number;
+
   item_id: number;
+
   display_order: number;
 }

@@ -114,7 +114,7 @@ export async function seed(knex: Knex): Promise<void> {
     for (let j = 0; j < item_ids.length; j++) {
       await knex('modgroup_item').insert([
         {
-          mod_id: mod_id,
+          mod_id,
           item_id: item_ids[j],
           item_is_standalone: false,
           display_order: display_order++,

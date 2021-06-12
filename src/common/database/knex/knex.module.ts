@@ -9,9 +9,7 @@ import { KnexService } from './knex.service';
     KnexService,
     {
       provide: KNEX_CONNECTION,
-      useFactory: async (knexService) => {
-        return knexService.get_knex();
-      },
+      useFactory: async (knexService) => knexService.get_knex(),
       inject: [KnexService],
     },
   ],

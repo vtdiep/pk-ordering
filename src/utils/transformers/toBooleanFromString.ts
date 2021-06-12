@@ -39,7 +39,7 @@ export function ToBooleanFromString() {
       console.log('y');
       console.log(value);
 
-      return value == 'false' ? false : true;
+      return value != 'false';
       // Note that Boolean("false") == true
     }
     if (typeof value == 'boolean') {

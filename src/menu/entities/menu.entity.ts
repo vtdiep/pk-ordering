@@ -31,9 +31,14 @@ export abstract class Menu_abstract
 }
 export class Menu extends Menu_abstract {
   menu_id?: number;
+
   name?: string;
+
   display_order: number;
+
   active?: boolean;
+
   description?: string;
+
   private_note?: string;
 }

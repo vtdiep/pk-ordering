@@ -18,5 +18,6 @@ export class CreateCategoryDto
   private_note?: string;
 
   category_X_item?: Prisma.category_X_itemCreateNestedManyWithoutCategoryInput;
+
   menu_X_category?: Prisma.menu_X_categoryCreateNestedManyWithoutCategoryInput;
 }

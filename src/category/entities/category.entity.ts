@@ -25,8 +25,12 @@ export abstract class Category_abstract
 }
 export class Category extends Category_abstract {
   category_id?: number;
+
   name?: string;
+
   description?: string;
+
   active?: boolean;
+
   private_note?: string;
 }

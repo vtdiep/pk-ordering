@@ -20,6 +20,8 @@ abstract class MenuXCategory_abstract
 
 export class Menu_X_Category extends MenuXCategory_abstract {
   category_id_category: number;
+
   menu_id_menu: number;
+
   display_order: number;
 }

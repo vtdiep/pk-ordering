@@ -43,10 +43,16 @@ export abstract class Item_abstract
 
 export class Item extends Item_abstract {
   item_id?: number;
+
   name: string;
+
   description?: string;
+
   active?: boolean;
+
   is_standalone?: boolean;
+
   price?: number;
+
   private_note?: string;
 }

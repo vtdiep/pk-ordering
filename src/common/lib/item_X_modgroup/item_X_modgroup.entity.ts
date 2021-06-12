@@ -24,7 +24,10 @@ abstract class Item_X_Modgroup_abstract
 
 export class Item_X_Modgroup extends Item_X_Modgroup_abstract {
   item_id: number;
+
   mod_id: number;
+
   item_is_standalone?: boolean;
+
   display_order: number;
 }

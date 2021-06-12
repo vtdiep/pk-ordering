@@ -49,14 +49,12 @@ export async function seed(knex: Knex): Promise<void> {
     .whereIn('name', pickItems)
     .pluck('item_id');
   pairings = cartesianProduct(modgroupIDs)(itemIDs);
-  pairedObjects = pairings.map((x) => {
-    return {
+  pairedObjects = pairings.map((x) => ({
       mod_id: x[0],
       item_id: x[1],
       item_is_standalone: true,
       display_order: display_order++,
-    };
-  });
+    }));
   await knex<Item_X_Modgroup>('item_X_modgroup').insert(pairedObjects);
 
   // Pancakes
@@ -72,14 +70,12 @@ export async function seed(knex: Knex): Promise<void> {
     .whereIn('name', pickItems)
     .pluck('item_id');
   pairings = cartesianProduct(modgroupIDs)(itemIDs);
-  pairedObjects = pairings.map((x) => {
-    return {
+  pairedObjects = pairings.map((x) => ({
       mod_id: x[0],
       item_id: x[1],
       item_is_standalone: true,
       display_order: display_order++,
-    };
-  });
+    }));
   await knex<Item_X_Modgroup>('item_X_modgroup').insert(pairedObjects);
 }
 

@@ -21,8 +21,8 @@ export class CategoryXItemService {
     return this.prisma.category_X_item.findUnique({
       where: {
         category_id_item_id: {
-          category_id: category_id,
-          item_id: item_id,
+          category_id,
+          item_id,
         },
       },
     });
@@ -38,8 +38,8 @@ export class CategoryXItemService {
       result = this.prisma.category_X_item.update({
         where: {
           category_id_item_id: {
-            category_id: category_id,
-            item_id: item_id,
+            category_id,
+            item_id,
           },
         },
         data: updateCategoryXItemDto,
@@ -54,8 +54,8 @@ export class CategoryXItemService {
     return this.prisma.category_X_item.delete({
       where: {
         category_id_item_id: {
-          category_id: category_id,
-          item_id: item_id,
+          category_id,
+          item_id,
         },
       },
     });
