@@ -6,11 +6,15 @@ import {
 } from '@nestjs/common';
 import Knex from 'knex';
 
+const config: Knex.Config = {
+  client: 'pg',
+  connection: process.env.DATABASE_URL,
+  searchPath: ['knex', 'public'],
+};
+
 @Injectable()
 export class KnexService implements OnModuleInit, OnModuleDestroy {
   private knex: Knex;
-
-  constructor() {}
 
   async onModuleInit() {
     this.knex = Knex(config);
@@ -37,8 +41,3 @@ export class KnexService implements OnModuleInit, OnModuleDestroy {
   }
 }
 
-const config: Knex.Config = {
-  client: 'pg',
-  connection: process.env.DATABASE_URL,
-  searchPath: ['knex', 'public'],
-};

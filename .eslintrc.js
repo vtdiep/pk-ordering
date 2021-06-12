@@ -25,5 +25,6 @@ module.exports = {
     'prefer-const': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
+    '@typescript-eslint/no-use-before-define': 'off',
   },
 };

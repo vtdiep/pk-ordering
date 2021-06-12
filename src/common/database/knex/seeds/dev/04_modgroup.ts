@@ -10,157 +10,141 @@ export async function seed(knex: Knex): Promise<void> {
   await knex.raw('TRUNCATE TABLE modgroup RESTART IDENTITY CASCADE');
 
   // Inserts seed entries
+  type ModgroupOption = Omit<Item, 'is_standalone'> & { is_standalone: false };
 
-  let modgroups = [];
+
+  type DataObj = {
+    modgroup: Modgroup;
+    options: ModgroupOption[];
+  };
+
   let note = '';
 
-  let options = [];
+
+  let pairs: DataObj[] = [];
+
   // Omelettes
-  modgroups.push({
-    name: 'Salt',
-    required_selection: 0,
-    max_selection: 1,
-    max_single_select: 1,
-    free_selection: 1,
-    private_note: '',
-  });
-  options.push([
-    {
-      name: 'No Salt',
-      description: '',
-      active: true,
-      is_standalone: false,
-      price: 0,
+  pairs.push({
+    modgroup: {
+      name: 'Salt',
+      required_selection: 0,
+      max_selection: 1,
+      max_single_select: 1,
+      free_selection: 1,
       private_note: '',
     },
-  ]);
+    options: [
+      {
+        name: 'No Salt',
+        description: '',
+        active: true,
+        is_standalone: false,
+        price: 0,
+        private_note: '',
+      },
+    ],
+  });
 
   // Pancake
-  modgroups.push({
-    name: 'Select Butter',
-    required_selection: 0,
-    max_selection: 1,
-    max_single_select: 1,
-    free_selection: 1,
-    private_note: note,
-  });
-  options.push([
-    {
-      name: 'Butter',
-      description: 'Comes from cows',
-      active: true,
-      price: 2.5,
-      private_note: '',
+  pairs.push({
+    modgroup: {
+      name: 'Select Butter',
+      required_selection: 0,
+      max_selection: 1,
+      max_single_select: 1,
+      free_selection: 1,
+      private_note: note,
     },
-    { name: 'Margarine', description: 'Slightly sweet', price: 2.5 },
-  ]);
-
-  modgroups.push({
-    name: 'Choose a topping',
-    required_selection: 0,
-    max_selection: 3,
-    max_single_select: 3,
-    free_selection: 1,
-    price: 1,
-    description: '',
-    private_note: '5/10/21',
+    options: [
+      {
+        name: 'Butter',
+        description: 'Comes from cows',
+        active: true,
+        is_standalone: false,
+        price: 2.5,
+        private_note: '',
+      },
+      {
+        name: 'Margarine',
+        description: 'Slightly sweet',
+        is_standalone: false,
+        price: 2.5,
+      },
+    ],
   });
-  options.push([
-    {
-      name: 'Strawberries',
-      description: 'Red',
-      active: true,
-      price: 2.5,
-      private_note: '',
+
+  pairs.push({
+    modgroup: {
+      name: 'Choose a topping',
+      required_selection: 0,
+      max_selection: 3,
+      max_single_select: 3,
+      free_selection: 1,
+      price: 1,
+      description: '',
+      private_note: '5/10/21',
     },
-    { name: 'Blueberries', description: 'Blue', active: true, price: 2.5 },
-    { name: 'Syrup', description: 'Sweet', active: true, price: 2.5 },
-    { name: 'Honey', description: 'Naturally sweet', price: 2.5 },
-  ]);
-
-  // Eggs
-  // modgroups.push(
-  //     { name: "Strawberries", description: "Red", active: true, price: 2.50, private_note: "" },
-  //     { name: "Blueberries", description: "Blue", active: true, price: 2.50 },
-  //     { name: "Syrup", description: "Sweet", active: true, price: 2.50 },
-  //     { name: "Honey", description: "Naturally sweet", price: 2.50 }
-  // );
-
-  // Burgers
-  // modgroups.push(
-  //     { name: "Strawberries", description: "Red", active: true, price: 2.50, private_note: "" },
-  //     { name: "Blueberries", description: "Blue", active: true, price: 2.50 },
-  //     { name: "Syrup", description: "Sweet", active: true, price: 2.50 },
-  //     { name: "Honey", description: "Naturally sweet", price: 2.50 }
-  // );
-
-  // Fries & Sides
-  // modgroups.push(
-  //     { name: "Strawberries", description: "Red", active: true, price: 2.50, private_note: "" },
-  //     { name: "Blueberries", description: "Blue", active: true, price: 2.50 },
-  //     { name: "Syrup", description: "Sweet", active: true, price: 2.50 },
-  //     { name: "Honey", description: "Naturally sweet", price: 2.50 }
-  // );
+    options: [
+      {
+        name: 'Strawberries',
+        description: 'Red',
+        active: true,
+        is_standalone: false,
+        price: 2.5,
+        private_note: '',
+      },
+      {
+        name: 'Blueberries',
+        description: 'Blue',
+        active: true,
+        is_standalone: false,
+        price: 2.5,
+      },
+      {
+        name: 'Syrup',
+        description: 'Sweet',
+        active: true,
+        is_standalone: false,
+        price: 2.5,
+      },
+      {
+        name: 'Honey',
+        description: 'Naturally sweet',
+        is_standalone: false,
+        price: 2.5,
+      },
+    ],
+  });
 
   // Insert into tables
 
-  let modIDs = await knex<Modgroup>('modgroup').insert(modgroups, 'mod_id');
+  let mods = pairs.map((x) => x.modgroup);
+  let opts = pairs.map((x) => x.options);
 
-  for (let i = 0; i < modIDs.length; i++) {
-    let modID = modIDs[i];
-    let modItem = options.shift();
-    let displayOrder = 0;
-    let itemIDs = await knex<Item>('item').insert(modItem, 'item_id');
+  let mids = await knex<Modgroup>('modgroup').insert(mods, 'mod_id');
+  let oids = await knex<Item>('item').insert(opts.flat(), 'item_id');
 
-    for (let j = 0; j < itemIDs.length; j++) {
-      await knex('modgroup_item').insert([
-        {
-          mod_id: modID,
-          item_id: itemIDs[j],
-          item_is_standalone: false,
-          display_order: displayOrder++,
-        },
-      ]);
-    }
-  }
+  // build pairs of [mod_id, option_id] grouped by mod_id
+  // ie:
+  // [
+  //    [[mod_id, option_id], [mod_id, option_id2]],
+  //    [[mod_id2, oid3], [mod_id2, oid4]]
+  // ]
+  let idPairs = pairs.map((pair, i) => {
+    let idPair = pair.options.map(() => [mids[i], oids.pop()]);
+    return idPair;
+  });
 
-  // results = await knex("item").insert([
-  //     { name: "Butter", description: "Comes from cows", active: true, price: 2.50, private_note: "" },
-  //     { name: "Margarine", description: "Slightly sweet", price: 2.50 }
-  // ], ['item_id']);
+  let modgroupOptions = idPairs
+    .map((arrayOfPairsByModId) => {
+      let modgroupOption = arrayOfPairsByModId.map((pair, i) => ({
+        mod_id: pair[0],
+        item_id: pair[1],
+        display_order: i,
+      }));
+      return modgroupOption;
+    })
+    .flat();
 
-  // await knex("modgroup").insert(modgroups)
-
-  // // Pancakes
-  // note = "Pancakes\n"
-  // modgroups = []
-  // modgroups.push(
-  //     {name: "Select Butter", required_selection: 0, max_selection: 1, max_single_select: 1, free_selection:1, private_note: note},
-  //     {name: "Select Pancake Toppings", required_selection: 0, max_selection: 3, max_single_select: 3, free_selection:1,
-  //         price: 1, description: "", private_note: note}
-
-  // );
-
-  // // Omelettes
-  //     // { name: "Ham & Cheese Omelette", is_standalone: true, price: 5 },
-  //     // { name: "Avocado Cheese Omelette", is_standalone: true,  price: 5 },
-  //     // { name: "Cheese Omelette", is_standalone: true, price: 3 },
-  //     // // Pancakes
-  //     // { name: "Buckwheat Pancake", description: "Nutty", active: true, is_standalone: true, price: 2.50, private_note: "Expected shortage of buckwheat for Spring" },
-  //     // { name: "Wheat Pancake", description: "Slightly sweet", is_standalone: true, price: 2.50 },
-  //     // // Eggs
-  //     // { name: "Eggs Over-Easy", active: true, is_standalone: true, price: 3 },
-  //     // { name: "Scrambled Eggs", active: true, is_standalone: true, price: 3, description: "2 eggs" },
-  //     // { name: "Sicilian Style Eggs", is_standalone: true, price: 3 },
-  //     // { name: "Sunny-side Up", is_standalone: true, price: 3 },
-  //     // // Burgers
-  //     // { name: "Classic", description: "Bun, tomato, beef patty", active: true, is_standalone: true, price: 5 },
-  //     // { name: "Cheeseburger", description: "Classic with a slice of cheese", active: true, is_standalone: true, price: 6 },
-  //     // { name: "Portabella Burger", description: "Mushroom alternative", active: true, is_standalone: true, price: 6 },
-  //     // // Fries & Sides
-  //     // { name: "French Fries (S)", description: "Crisp and made to order", active: true, is_standalone: true, price: 3 },
-  //     // { name: "French Fries (L)", description: "Crisp and made to order. Large", active: true, is_standalone: true, price: 4 },
-  //     // { name: "Potato Wedges", description: "", active: false, is_standalone: true, price: 4 },
-  //     // { name: "Tater Tots", description: "Good with sauce, Good on their own!", active: true, is_standalone: true, price: 3 },
-  //     // { name: "Mac n' Cheese", description: "Double cheesey macaroni", active: true, is_standalone: true, price: 3 },
+  await knex('modgroup_item').insert(modgroupOptions);
 }

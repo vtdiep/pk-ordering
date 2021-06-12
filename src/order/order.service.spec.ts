@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PrismaService } from '../../src/common/database/prisma/prisma.service';
+import { PrismaService } from "../common/database/prisma/prisma.service";
 import { OrderService } from './order.service';
-import { mockedPrismaService } from '../../src/utils/mocks/prisma.service';
+import { mockedPrismaService } from "../utils/mocks/prisma.service";
 import { CreateOrderDto } from './dto/create-order.dto';
 
 describe('OrderService', () => {

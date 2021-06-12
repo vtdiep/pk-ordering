@@ -81,7 +81,7 @@ export async function seed(knex: Knex): Promise<void> {
 }
 
 function cartesianProduct<T>(as: T[]) {
-  return function (bs: T[]) {
+  return function curriedCartesianProduct(bs: T[]) {
     return as.flatMap((a) => bs.map((b) => [a, b]));
   };
 }
