@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 import * as Knex from 'knex';
 import { Item } from 'src/item/entities/item.entity';
 import { Modgroup } from 'src/modgroup/entities/modgroup.entity';

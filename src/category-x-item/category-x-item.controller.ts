@@ -8,10 +8,10 @@ import {
   Delete,
   UseFilters,
 } from '@nestjs/common';
+import { category_X_item } from '@prisma/client';
 import { CategoryXItemService } from './category-x-item.service';
 import { CreateCategoryXItemDto } from './dto/create-category-x-item.dto';
 import { UpdateCategoryXItemDto } from './dto/update-category-x-item.dto';
-import { category_X_item } from '@prisma/client';
 
 @Controller('category-item')
 export class CategoryXItemController {

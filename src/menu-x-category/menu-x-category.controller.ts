@@ -8,10 +8,10 @@ import {
   Delete,
   Patch,
 } from '@nestjs/common';
+import { menu_X_category } from '@prisma/client';
 import { MenuXCategoryService } from './menu-x-category.service';
 import { CreateMenuXCategoryDto } from './dto/create-menu-x-category.dto';
 import { UpdateMenuXCategoryDto } from './dto/update-menu-x-category.dto';
-import { menu_X_category } from '@prisma/client';
 
 @Controller('menu-x-category')
 export class MenuXCategoryController {

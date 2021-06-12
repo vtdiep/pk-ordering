@@ -7,10 +7,10 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { modgroup } from '@prisma/client';
 import { ModgroupService } from './modgroup.service';
 import { CreateModgroupDto } from './dto/create-modgroup.dto';
 import { UpdateModgroupDto } from './dto/update-modgroup.dto';
-import { modgroup } from '@prisma/client';
 
 @Controller('modgroup')
 export class ModgroupController {

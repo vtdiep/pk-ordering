@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import Knex from 'knex';
-import { KNEX_CONNECTION } from '../../common/constants';
 import { KnexService } from 'src/common/database/knex/knex.service';
+import { KNEX_CONNECTION } from '../../common/constants';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { OrderDetailDto } from '../dto/order-details.dto';
 

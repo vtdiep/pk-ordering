@@ -7,10 +7,10 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { order } from '@prisma/client';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { order } from '@prisma/client';
 import { ValidatorPipe } from './pipes/validator.pipe';
 
 @Controller('order')

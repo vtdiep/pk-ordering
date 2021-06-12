@@ -11,6 +11,7 @@ import {
 } from 'class-validator';
 import { Match } from '../../utils/validators/matchProperty';
 import { Modgroup } from '../entities/modgroup.entity';
+
 export class CreateModgroupDto
   extends OmitType(Modgroup, ['mod_id'] as const)
   implements Prisma.modgroupCreateInput

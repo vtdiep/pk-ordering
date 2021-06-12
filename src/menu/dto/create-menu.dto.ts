@@ -12,6 +12,7 @@ import {
   Min,
 } from 'class-validator';
 import { Menu } from '../entities/menu.entity';
+
 export class CreateMenuDto
   extends OmitType(Menu, ['menu_id'] as const)
   implements Prisma.menuCreateInput

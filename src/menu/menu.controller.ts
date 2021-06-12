@@ -8,10 +8,10 @@ import {
   Delete,
   Patch,
 } from '@nestjs/common';
+import { menu } from '@prisma/client';
 import { MenuService } from './menu.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
-import { menu } from '@prisma/client';
 
 @Controller('menu')
 export class MenuController {

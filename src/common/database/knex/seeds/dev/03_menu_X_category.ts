@@ -1,5 +1,6 @@
-import { category, menu, menu_X_category } from '.prisma/client';
+/* eslint-disable no-plusplus */
 import * as Knex from 'knex';
+import { category, menu, menu_X_category } from '.prisma/client';
 
 /**
  * Seed for menu_X_category table
@@ -26,19 +27,19 @@ export async function seed(knex: Knex): Promise<void> {
   await knex<menu_X_category>('menu_X_category').insert([
     {
       menu_id_menu: breakfastId,
-      category_id_category: categories.find((x) => x.name == 'Omelettes')
+      category_id_category: categories.find((x) => x.name === 'Omelettes')
         .category_id,
       display_order: displayOrder++,
     },
     {
       menu_id_menu: breakfastId,
-      category_id_category: categories.find((x) => x.name == 'Pancakes')
+      category_id_category: categories.find((x) => x.name === 'Pancakes')
         .category_id,
       display_order: displayOrder++,
     },
     {
       menu_id_menu: breakfastId,
-      category_id_category: categories.find((x) => x.name == 'Eggs')
+      category_id_category: categories.find((x) => x.name === 'Eggs')
         .category_id,
       display_order: displayOrder++,
     },

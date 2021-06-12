@@ -35,14 +35,14 @@ export function ToBooleanFromString() {
     console.log(obj);
     console.log(this);
 
-    if (typeof value == 'string' && ['true', 'false'].includes(value)) {
+    if (typeof value === 'string' && ['true', 'false'].includes(value)) {
       console.log('y');
       console.log(value);
 
-      return value != 'false';
+      return value !== 'false';
       // Note that Boolean("false") == true
     }
-    if (typeof value == 'boolean') {
+    if (typeof value === 'boolean') {
       return value;
     }
     throw new BadRequestException({
