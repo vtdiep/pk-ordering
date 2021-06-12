@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-classes-per-file
 import { Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsInt, IsNumber, IsString, Max, Min } from 'class-validator';
