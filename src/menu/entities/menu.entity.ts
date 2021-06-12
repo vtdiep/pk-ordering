@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 import { OnlyPrimitives } from 'src/utils/types/only-primitives';
 
-export abstract class Menu_abstract
+export abstract class MenuBaseEntity
   implements OnlyPrimitives<Prisma.menuUncheckedCreateInput>
 {
   @Type(() => Number)
@@ -29,7 +29,7 @@ export abstract class Menu_abstract
   @IsString()
   abstract private_note?: string;
 }
-export class Menu extends Menu_abstract {
+export class Menu extends MenuBaseEntity {
   menu_id?: number;
 
   name?: string;

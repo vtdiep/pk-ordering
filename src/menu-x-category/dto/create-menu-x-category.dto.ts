@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
-import { Menu_X_Category } from '../entities/menu-x-category.entity';
+import { MenuXCategory } from '../entities/menu-x-category.entity';
 
-export class CreateMenuXCategoryDto extends Menu_X_Category {
+export class CreateMenuXCategoryDto extends MenuXCategory {
   category_id_category: number;
 
   menu_id_menu: number;

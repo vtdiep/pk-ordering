@@ -103,21 +103,21 @@ export async function seed(knex: Knex): Promise<void> {
 
   // Insert into tables
 
-  let mod_ids = await knex<Modgroup>('modgroup').insert(modgroups, 'mod_id');
+  let modIDs = await knex<Modgroup>('modgroup').insert(modgroups, 'mod_id');
 
-  for (let i = 0; i < mod_ids.length; i++) {
-    let mod_id = mod_ids[i];
-    let mod_item = options.shift();
-    let display_order = 0;
-    let item_ids = await knex<Item>('item').insert(mod_item, 'item_id');
+  for (let i = 0; i < modIDs.length; i++) {
+    let modID = modIDs[i];
+    let modItem = options.shift();
+    let displayOrder = 0;
+    let itemIDs = await knex<Item>('item').insert(modItem, 'item_id');
 
-    for (let j = 0; j < item_ids.length; j++) {
+    for (let j = 0; j < itemIDs.length; j++) {
       await knex('modgroup_item').insert([
         {
-          mod_id,
-          item_id: item_ids[j],
+          mod_id: modID,
+          item_id: itemIDs[j],
           item_is_standalone: false,
-          display_order: display_order++,
+          display_order: displayOrder++,
         },
       ]);
     }

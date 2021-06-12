@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsInt } from 'class-validator';
 
-abstract class MenuXCategory_abstract
+abstract class MenuXCategoryBaseEntity
   implements Prisma.menu_X_categoryUncheckedCreateInput
 {
   @IsInt()
@@ -18,7 +18,7 @@ abstract class MenuXCategory_abstract
   abstract display_order: number;
 }
 
-export class Menu_X_Category extends MenuXCategory_abstract {
+export class MenuXCategory extends MenuXCategoryBaseEntity {
   category_id_category: number;
 
   menu_id_menu: number;

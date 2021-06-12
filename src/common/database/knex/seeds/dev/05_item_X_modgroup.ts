@@ -1,5 +1,5 @@
 import * as Knex from 'knex';
-import { Item_X_Modgroup } from 'src/common/lib/item_X_modgroup/item_X_modgroup.entity';
+import { ItemXModgroup } from 'src/common/lib/item_X_modgroup/item_X_modgroup.entity';
 import { Item } from 'src/item/entities/item.entity';
 import { Modgroup } from 'src/modgroup/entities/modgroup.entity';
 
@@ -29,8 +29,8 @@ export async function seed(knex: Knex): Promise<void> {
   let selectedItems: number[];
   let pickItems: string[];
   let itemIDs: number[];
-  let display_order = 0;
-  let pairedObjects: Item_X_Modgroup[];
+  let displayOrder = 0;
+  let pairedObjects: ItemXModgroup[];
 
   // Omelettes
   pickMods = ['Salt'];
@@ -53,9 +53,9 @@ export async function seed(knex: Knex): Promise<void> {
       mod_id: x[0],
       item_id: x[1],
       item_is_standalone: true,
-      display_order: display_order++,
+      display_order: displayOrder++,
     }));
-  await knex<Item_X_Modgroup>('item_X_modgroup').insert(pairedObjects);
+  await knex<ItemXModgroup>('item_X_modgroup').insert(pairedObjects);
 
   // Pancakes
   pickMods = ['Select Butter', 'Choose a topping'];
@@ -74,9 +74,9 @@ export async function seed(knex: Knex): Promise<void> {
       mod_id: x[0],
       item_id: x[1],
       item_is_standalone: true,
-      display_order: display_order++,
+      display_order: displayOrder++,
     }));
-  await knex<Item_X_Modgroup>('item_X_modgroup').insert(pairedObjects);
+  await knex<ItemXModgroup>('item_X_modgroup').insert(pairedObjects);
 }
 
 function cartesianProduct<T>(as: T[]) {

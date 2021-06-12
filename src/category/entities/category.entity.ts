@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { OnlyPrimitives } from 'src/utils/types/only-primitives';
 
-export abstract class Category_abstract
+export abstract class CategoryBaseEntity
   implements OnlyPrimitives<Prisma.categoryUncheckedCreateInput>
 {
   @Type(() => Number)
@@ -23,7 +23,7 @@ export abstract class Category_abstract
   @IsString()
   abstract private_note?: string;
 }
-export class Category extends Category_abstract {
+export class Category extends CategoryBaseEntity {
   category_id?: number;
 
   name?: string;

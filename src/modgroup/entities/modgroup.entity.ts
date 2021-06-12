@@ -4,7 +4,7 @@ import { IsInt, IsNumber, IsString, Max, Min } from 'class-validator';
 import { OnlyPrimitives } from 'src/utils/types/only-primitives';
 import { Match } from 'src/utils/validators/matchProperty';
 
-export abstract class Modgroup_abstract
+export abstract class ModgroupBaseEntity
   implements OnlyPrimitives<Prisma.modgroupUncheckedCreateInput>
 {
   @IsInt()
@@ -50,4 +50,4 @@ export abstract class Modgroup_abstract
   private_note?: string;
 }
 
-export class Modgroup extends Modgroup_abstract {}
+export class Modgroup extends ModgroupBaseEntity {}

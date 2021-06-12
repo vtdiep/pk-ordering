@@ -3,10 +3,10 @@ import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
 import { CreateCategoryDto } from 'src/category/dto/create-category.dto';
 import { Category } from 'src/category/entities/category.entity';
-import { Category_X_Item } from 'src/common/lib/category_X_item/category_X_item.entity';
+import { CategoryXItem } from 'src/common/lib/category_X_item/category_X_item.entity';
 import { OnlyPrimitives } from 'src/utils/types/only-primitives';
 
-export class _Category_From_Item_Dto {
+export class CategoryRefFromItemDto {
   @ValidateNested()
   @Type(() =>
     OmitType(CreateCategoryDto, ['category_X_item', 'menu_X_category']),
@@ -18,6 +18,6 @@ export class _Category_From_Item_Dto {
   link?: Required<Pick<Category, 'category_id'>>;
 
   @ValidateNested()
-  @Type(() => PickType(Category_X_Item, ['display_order'] as const))
-  join_details: Pick<Category_X_Item, 'display_order'>;
+  @Type(() => PickType(CategoryXItem, ['display_order'] as const))
+  join_details: Pick<CategoryXItem, 'display_order'>;
 }

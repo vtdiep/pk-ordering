@@ -3,8 +3,8 @@ import { Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsNotEmptyObject, IsOptional, ValidateNested } from 'class-validator';
 import { Item } from '../entities/item.entity';
-import { _Category_From_Item_Dto } from './_Category_From_Item.dto';
-import { _Modgroup_From_Item_Dto } from './_Modgroup_From_Item.dto';
+import { CategoryRefFromItemDto } from './category-ref-from-item.dto';
+import { ModgroupRefFromItemDto } from './modgroup-ref-from-item.dto';
 
 export class CreateItemDto extends OmitType(Item, ['item_id'] as const) {
   name: string;
@@ -27,12 +27,12 @@ export class CreateItemDto extends OmitType(Item, ['item_id'] as const) {
   @IsOptional()
   @ValidateNested()
   @IsNotEmptyObject()
-  @Type(() => _Category_From_Item_Dto)
-  category?: _Category_From_Item_Dto;
+  @Type(() => CategoryRefFromItemDto)
+  category?: CategoryRefFromItemDto;
 
   @IsOptional()
   @ValidateNested()
   @IsNotEmptyObject()
-  @Type(() => _Modgroup_From_Item_Dto)
-  modgroup?: _Modgroup_From_Item_Dto;
+  @Type(() => ModgroupRefFromItemDto)
+  modgroup?: ModgroupRefFromItemDto;
 }

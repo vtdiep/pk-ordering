@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsInt, IsNotEmpty } from 'class-validator';
 
-abstract class Category_X_Item_abstract
+abstract class CategoryXItemBaseEntity
   implements Prisma.category_X_itemUncheckedCreateInput
 {
   @IsInt()
@@ -21,7 +21,7 @@ abstract class Category_X_Item_abstract
   abstract display_order: number;
 }
 
-export class Category_X_Item extends Category_X_Item_abstract {
+export class CategoryXItem extends CategoryXItemBaseEntity {
   category_id: number;
 
   item_id: number;

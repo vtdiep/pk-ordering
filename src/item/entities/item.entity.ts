@@ -10,7 +10,7 @@ import {
 import { ToBooleanFromString } from 'src/utils/transformers/toBooleanFromString';
 import { OnlyPrimitives } from 'src/utils/types/only-primitives';
 
-export abstract class Item_abstract
+export abstract class ItemBaseEntity
   implements OnlyPrimitives<Prisma.itemUncheckedCreateInput>
 {
   @Type(() => Number)
@@ -41,7 +41,7 @@ export abstract class Item_abstract
   abstract private_note?: string;
 }
 
-export class Item extends Item_abstract {
+export class Item extends ItemBaseEntity {
   item_id?: number;
 
   name: string;

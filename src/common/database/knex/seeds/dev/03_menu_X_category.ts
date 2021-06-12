@@ -20,7 +20,7 @@ export async function seed(knex: Knex): Promise<void> {
     'name',
   ]);
 
-  let display_counter = 1;
+  let displayOrder = 1;
 
   // Inserts seed entries
   await knex<menu_X_category>('menu_X_category').insert([
@@ -28,19 +28,19 @@ export async function seed(knex: Knex): Promise<void> {
       menu_id_menu: breakfastId,
       category_id_category: categories.find((x) => x.name == 'Omelettes')
         .category_id,
-      display_order: display_counter++,
+      display_order: displayOrder++,
     },
     {
       menu_id_menu: breakfastId,
       category_id_category: categories.find((x) => x.name == 'Pancakes')
         .category_id,
-      display_order: display_counter++,
+      display_order: displayOrder++,
     },
     {
       menu_id_menu: breakfastId,
       category_id_category: categories.find((x) => x.name == 'Eggs')
         .category_id,
-      display_order: display_counter++,
+      display_order: displayOrder++,
     },
   ]);
 }
