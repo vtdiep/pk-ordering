@@ -12,14 +12,12 @@ export async function seed(knex: Knex): Promise<void> {
   // Inserts seed entries
   type ModgroupOption = Omit<Item, 'is_standalone'> & { is_standalone: false };
 
-
   type DataObj = {
     modgroup: Modgroup;
     options: ModgroupOption[];
   };
 
   let note = '';
-
 
   let pairs: DataObj[] = [];
 

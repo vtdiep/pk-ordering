@@ -6,9 +6,9 @@ import {
   IsNumber,
   IsInt,
   Min,
-  IsString
+  IsString,
 } from 'class-validator';
-import { OrderDetailModDto } from "./order-detail-mod.dto";
+import { OrderDetailModDto } from './order-detail-mod.dto';
 
 export class OrderDetailItemDto implements Prisma.JsonObject {
   [x: string]: Prisma.JsonValue;

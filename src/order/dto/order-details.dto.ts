@@ -17,5 +17,3 @@ export class OrderDetailDto implements Prisma.JsonObject {
   @IsArray()
   items: [OrderDetailItemDto];
 }
-
-

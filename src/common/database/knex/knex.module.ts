@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { KNEX_CONNECTION } from "../../constants";
+import { KNEX_CONNECTION } from '../../constants';
 import { KnexService } from './knex.service';
 
 @Module({

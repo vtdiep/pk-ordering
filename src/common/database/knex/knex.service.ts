@@ -40,4 +40,3 @@ export class KnexService implements OnModuleInit, OnModuleDestroy {
     return this.knex;
   }
 }
-

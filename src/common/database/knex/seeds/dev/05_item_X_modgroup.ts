@@ -51,11 +51,11 @@ export async function seed(knex: Knex): Promise<void> {
     .pluck('item_id');
   pairings = cartesianProduct(modgroupIDs)(itemIDs);
   pairedObjects = pairings.map((x) => ({
-      mod_id: x[0],
-      item_id: x[1],
-      item_is_standalone: true,
-      display_order: displayOrder++,
-    }));
+    mod_id: x[0],
+    item_id: x[1],
+    item_is_standalone: true,
+    display_order: displayOrder++,
+  }));
   await knex<ItemXModgroup>('item_X_modgroup').insert(pairedObjects);
 
   // Pancakes
@@ -72,11 +72,11 @@ export async function seed(knex: Knex): Promise<void> {
     .pluck('item_id');
   pairings = cartesianProduct(modgroupIDs)(itemIDs);
   pairedObjects = pairings.map((x) => ({
-      mod_id: x[0],
-      item_id: x[1],
-      item_is_standalone: true,
-      display_order: displayOrder++,
-    }));
+    mod_id: x[0],
+    item_id: x[1],
+    item_is_standalone: true,
+    display_order: displayOrder++,
+  }));
   await knex<ItemXModgroup>('item_X_modgroup').insert(pairedObjects);
 }
 

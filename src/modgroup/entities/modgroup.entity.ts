@@ -18,7 +18,11 @@ export abstract class ModgroupBaseEntity
   @IsInt()
   @Min(0)
   @Type(() => Number)
-  @Match('must be <=', 'max_selection', (thisProp: number, otherProp) => otherProp >= thisProp)
+  @Match(
+    'must be <=',
+    'max_selection',
+    (thisProp: number, otherProp) => otherProp >= thisProp,
+  )
   required_selection: number;
 
   @IsInt()
@@ -30,12 +34,20 @@ export abstract class ModgroupBaseEntity
   @IsInt()
   @Min(0)
   @Type(() => Number)
-  @Match('must be <=', 'max_selection', (thisProp: number, otherProp) => otherProp >= thisProp)
+  @Match(
+    'must be <=',
+    'max_selection',
+    (thisProp: number, otherProp) => otherProp >= thisProp,
+  )
   max_single_select: number;
 
   @IsInt()
   @Min(0)
-  @Match('must be <=', 'max_selection', (thisProp: number, otherProp) => otherProp >= thisProp)
+  @Match(
+    'must be <=',
+    'max_selection',
+    (thisProp: number, otherProp) => otherProp >= thisProp,
+  )
   @Type(() => Number)
   free_selection: number;
 
