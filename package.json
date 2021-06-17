@@ -38,6 +38,8 @@
     "rxjs": "^6.6.6"
   },
   "devDependencies": {
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
     "@nestjs/cli": "^7.5.6",
     "@nestjs/schematics": "^7.2.8",
     "@nestjs/testing": "^7.6.13",
