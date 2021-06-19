@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { OrderModule } from './order/order.module';
@@ -11,6 +12,7 @@ import { CategoryXItemModule } from './category-x-item/category-x-item.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ envFilePath: '../.env' }),
     OrderModule,
     MenuModule,
     CategoryModule,
