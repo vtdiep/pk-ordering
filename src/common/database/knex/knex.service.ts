@@ -6,11 +6,9 @@ import {
 } from '@nestjs/common';
 import Knex from 'knex';
 
-const config: Knex.Config = {
-  client: 'pg',
-  connection: process.env.DATABASE_URL,
-  searchPath: ['knex', 'public'],
-};
+const knexfile = require('../../../../knexfile');
+
+const config: Knex.Config = knexfile.development;
 
 @Injectable()
 export class KnexService implements OnModuleInit, OnModuleDestroy {
@@ -22,6 +20,8 @@ export class KnexService implements OnModuleInit, OnModuleDestroy {
       await this.knex.raw('select 1');
     } catch (error) {
       Logger.error(`Knex: Failed to connect to database; closing program...`);
+      Logger.error(error);
+      Logger.error(`Knex: Config was ${JSON.stringify(config)}`);
       process.exit(1);
     }
     Logger.log(`Knex: Connected to database - OK`);
