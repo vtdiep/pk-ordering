@@ -1,15 +1,16 @@
-require('dotenv').config({path: './src/common/database/prisma/.env'});
+import dotenv from 'dotenv';
+
+dotenv.config({ path: './.env' });
 
 // Update with your config settings.
 
 module.exports = {
-
   development: {
-    client: "postgresql",
+    client: 'postgresql',
     connection: process.env.DATABASE_URL,
     seeds: {
-      directory: './src/common/database/knex/seeds/dev'
-    }
+      directory: './src/common/database/knex/seeds/dev',
+    },
   },
 
   // staging: {
@@ -43,5 +44,4 @@ module.exports = {
   //     tableName: "knex_migrations"
   //   }
   // }
-
 };
