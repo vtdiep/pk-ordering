@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 
-dotenv.config({ path: './.env' });
+dotenv.config({ path: '../.env' });
 
 // Update with your config settings.
 
@@ -9,7 +9,7 @@ module.exports = {
     client: 'postgresql',
     connection: process.env.DATABASE_URL,
     seeds: {
-      directory: './src/common/database/knex/seeds/dev',
+      directory: './common/database/knex/seeds/dev',
     },
   },
 

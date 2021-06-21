@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import Knex from 'knex';
 
-const knexfile = require('../../../../knexfile');
+const knexfile = require('../../../knexfile');
 
 const config: Knex.Config = knexfile.development;
 
