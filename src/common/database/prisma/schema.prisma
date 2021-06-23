@@ -20,7 +20,7 @@ model category {
 model category_X_item {
   category_id   Int
   item_id       Int
-  display_order Int
+  display_order Int      @db.SmallInt
   category      category @relation(fields: [category_id], references: [category_id])
   item          item     @relation(fields: [item_id], references: [item_id])
 
@@ -33,7 +33,7 @@ model item {
   description     String?
   active          Boolean           @default(true)
   is_standalone   Boolean           @default(false)
-  price           Float?
+  price           Decimal?          @db.Money
   private_note    String?
   category_X_item category_X_item[]
   item_X_modgroup item_X_modgroup[]
@@ -46,7 +46,7 @@ model item_X_modgroup {
   item_id            Int
   mod_id             Int
   item_is_standalone Boolean  @default(false)
-  display_order      Int
+  display_order      Int      @db.SmallInt
   item               item     @relation(fields: [item_id, item_is_standalone], references: [item_id, is_standalone])
   modgroup           modgroup @relation(fields: [mod_id], references: [mod_id])
 
@@ -56,7 +56,7 @@ model item_X_modgroup {
 model menu {
   menu_id         Int               @id @default(autoincrement())
   name            String?
-  display_order   Int
+  display_order   Int               @db.SmallInt
   active          Boolean           @default(true)
   description     String?
   private_note    String?
@@ -66,7 +66,7 @@ model menu {
 model menu_X_category {
   category_id_category Int
   menu_id_menu         Int
-  display_order        Int
+  display_order        Int      @db.SmallInt
   category             category @relation(fields: [category_id_category], references: [category_id])
   menu                 menu     @relation(fields: [menu_id_menu], references: [menu_id])
 
@@ -76,11 +76,11 @@ model menu_X_category {
 model modgroup {
   mod_id             Int               @id @default(autoincrement())
   name               String
-  required_selection Int
-  max_selection      Int
-  max_single_select  Int
-  free_selection     Int
-  price              Float             @default(0)
+  required_selection Int               @db.SmallInt
+  max_selection      Int               @db.SmallInt
+  max_single_select  Int               @db.SmallInt
+  free_selection     Int               @db.SmallInt
+  price              Decimal           @default(0) @db.Money
   description        String?
   private_note       String?
   item_X_modgroup    item_X_modgroup[]
@@ -92,8 +92,8 @@ model modgroup_item {
   mod_id             Int
   item_id            Int
   item_is_standalone Boolean  @default(false)
-  price              Float?
-  display_order      Int
+  price              Decimal? @db.Money
+  display_order      Int      @db.SmallInt
   item               item     @relation(fields: [item_id, item_is_standalone], references: [item_id, is_standalone])
   modgroup           modgroup @relation(fields: [mod_id], references: [mod_id])
 
@@ -102,17 +102,17 @@ model modgroup_item {
 
 model order {
   oid               Int          @id @default(autoincrement())
-  email             String
+  email             String       @db.Citext
   name              String
   phone             String?
   transaction_token String?
-  time_placed       DateTime     @default(now())
-  time_accepted     DateTime?
-  pickup_time       DateTime
-  amount_paid       Float
-  tax               Float
+  time_placed       DateTime     @default(now()) @db.Timestamptz(6)
+  time_accepted     DateTime?    @db.Timestamptz(6)
+  pickup_time       DateTime     @db.Timestamptz(6)
+  amount_paid       Decimal      @db.Money
+  tax               Decimal      @db.Money
   status            order_status @default(NEW)
-  details           Json
+  details           Json         @db.Json
 }
 
 enum order_status {
