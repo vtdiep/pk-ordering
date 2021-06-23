@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import Knex from 'knex';
+import { Knex } from 'knex';
 import { KNEX_CONNECTION } from 'src/common/constants';
 import { KnexModule } from 'src/common/database/knex/knex.module';
 import { KnexService } from 'src/common/database/knex/knex.service';

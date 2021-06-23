@@ -1,5 +1,5 @@
 /* eslint-disable no-plusplus */
-import * as Knex from 'knex';
+import { Knex } from 'knex';
 import { category, menu, menu_X_category } from '.prisma/client';
 
 /**

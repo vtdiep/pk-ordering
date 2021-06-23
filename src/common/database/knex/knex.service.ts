@@ -4,7 +4,7 @@ import {
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
-import Knex from 'knex';
+import { knex, Knex } from 'knex';
 
 const knexfile = require('../../../knexfile');
 
@@ -15,7 +15,7 @@ export class KnexService implements OnModuleInit, OnModuleDestroy {
   private knex: Knex;
 
   async onModuleInit() {
-    this.knex = Knex(config);
+    this.knex = knex(config);
     try {
       await this.knex.raw('select 1');
     } catch (error) {
@@ -35,7 +35,7 @@ export class KnexService implements OnModuleInit, OnModuleDestroy {
 
   get_knex() {
     if (!this.knex) {
-      this.knex = Knex(config);
+      this.knex = knex(config);
     }
     return this.knex;
   }
