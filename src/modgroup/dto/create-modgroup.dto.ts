@@ -27,7 +27,7 @@ export class CreateModgroupDto
   free_selection: number;
 
   @IsOptional()
-  price?: number;
+  price?: number | Prisma.Decimal;
 
   @IsOptional()
   description?: string;

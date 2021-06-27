@@ -36,7 +36,7 @@ export abstract class ItemBaseEntity
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
-  abstract price?: number;
+  abstract price?: number | Prisma.Decimal;
 
   @IsString()
   abstract private_note?: string;
@@ -53,7 +53,7 @@ export class Item extends ItemBaseEntity {
 
   is_standalone?: boolean;
 
-  price?: number;
+  price?: number | Prisma.Decimal;
 
   private_note?: string;
 }

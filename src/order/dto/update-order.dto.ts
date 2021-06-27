@@ -32,10 +32,10 @@ export class UpdateOrderDto extends OmitType(Order, [] as const) {
   pickup_time: string | Date;
 
   @IsOptional()
-  amount_paid: number;
+  amount_paid: number | Prisma.Decimal;
 
   @IsOptional()
-  tax: number;
+  tax: number | Prisma.Decimal;
 
   @IsOptional()
   status?: order_status | undefined;

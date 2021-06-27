@@ -19,7 +19,7 @@ export class CreateItemDto extends OmitType(Item, ['item_id'] as const) {
   is_standalone?: boolean;
 
   @IsOptional()
-  price?: number;
+  price?: number | Prisma.Decimal;
 
   @IsOptional()
   private_note?: string;

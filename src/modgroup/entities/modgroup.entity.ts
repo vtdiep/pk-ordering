@@ -54,7 +54,7 @@ export abstract class ModgroupBaseEntity
   @IsNumber({ maxDecimalPlaces: 2 })
   @Type(() => Number)
   @Min(0)
-  price?: number;
+  price?: number | Prisma.Decimal;
 
   @IsString()
   description?: string;

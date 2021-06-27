@@ -1,4 +1,5 @@
 import { OmitType } from '@nestjs/mapped-types';
+import { Decimal } from '@prisma/client/runtime';
 import { IsOptional } from 'class-validator';
 import { Order } from '../entities/order.entity';
 import { OrderDetailDto } from './order-details.dto';
@@ -19,9 +20,9 @@ export class CreateOrderDto extends OmitType(Order, [
 
   pickup_time: string | Date;
 
-  amount_paid: number;
+  amount_paid: number | Decimal;
 
-  tax: number;
+  tax: number | Decimal;
 
   details: OrderDetailDto;
 }
