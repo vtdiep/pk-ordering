@@ -1,7 +1,5 @@
 import { OmitType } from '@nestjs/mapped-types';
-import {
-  IsOptional,
-} from 'class-validator';
+import { IsOptional } from 'class-validator';
 import { Order } from '../entities/order.entity';
 import { OrderDetailDto } from './order-details.dto';
 
@@ -17,7 +15,7 @@ export class CreateOrderDto extends OmitType(Order, [
   name: string;
 
   @IsOptional()
-  phone?: string;
+  phone?: string | undefined | null;
 
   pickup_time: string | Date;
 

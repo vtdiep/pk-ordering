@@ -41,7 +41,7 @@ export class OrderController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    let result: order;
+    let result: order | null;
     try {
       result = await this.orderService.findOne(+id);
     } catch (error) {

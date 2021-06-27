@@ -17,16 +17,16 @@ export class UpdateOrderDto extends OmitType(Order, [] as const) {
   name: string;
 
   @IsOptional()
-  phone?: string;
+  phone?: string | null | undefined;
 
   @IsOptional()
-  transaction_token?: string;
+  transaction_token?: string | null | undefined;
 
   @IsOptional()
-  time_placed?: string | Date;
+  time_placed?: string | Date | undefined;
 
   @IsOptional()
-  time_accepted?: string | Date;
+  time_accepted?: string | Date | null | undefined;
 
   @IsOptional()
   pickup_time: string | Date;
@@ -38,7 +38,7 @@ export class UpdateOrderDto extends OmitType(Order, [] as const) {
   tax: number;
 
   @IsOptional()
-  status?: order_status;
+  status?: order_status | undefined;
 
   @IsOptional()
   details: OrderDetailDto;

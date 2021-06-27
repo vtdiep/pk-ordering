@@ -34,7 +34,7 @@ export class ItemController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    let result: item;
+    let result: item | null;
     result = await this.itemService.findOne(+id);
     return result;
   }

@@ -26,5 +26,8 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
     '@typescript-eslint/no-use-before-define': 'off',
+    'import/no-extraneous-dependencies': [
+      'error', {'devDependencies': ['**/*.test.ts', '**/*.spec.ts', '**/*-spec.ts', './src/utils/**/**.ts']}
+    ],
   },
 };

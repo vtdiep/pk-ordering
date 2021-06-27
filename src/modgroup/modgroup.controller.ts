@@ -32,7 +32,7 @@ export class ModgroupController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    let result: modgroup;
+    let result: modgroup | null;
     result = await this.modgroupService.findOne(+id);
     return result;
   }

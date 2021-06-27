@@ -33,7 +33,7 @@ export class MenuXCategoryController {
 
   @Get(':mid/:cid')
   async findOne(@Param('mid') mid: string, @Param('cid') cid: string) {
-    let result: menu_X_category;
+    let result: menu_X_category | null;
     result = await this.menuXCategoryService.findOne(+mid, +cid);
     return result;
   }

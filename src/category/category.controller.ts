@@ -32,7 +32,7 @@ export class CategoryController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    let result: category;
+    let result: category | null;
     result = await this.categoryService.findOne(+id);
     return result;
   }

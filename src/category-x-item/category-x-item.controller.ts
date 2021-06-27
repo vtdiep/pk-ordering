@@ -26,7 +26,7 @@ export class CategoryXItemController {
 
   @Get()
   async findAll() {
-    let result: category_X_item[];
+    let result: category_X_item[] = [];
     try {
       result = await this.categoryXItemService.findAll();
     } catch (error) {
@@ -39,7 +39,7 @@ export class CategoryXItemController {
 
   @Get(':cid/:iid')
   async findOne(@Param('cid') cid: string, @Param('iid') iid: string) {
-    let result: category_X_item;
+    let result: category_X_item | null;
     result = await this.categoryXItemService.findOne(+cid, +iid);
     return result;
   }

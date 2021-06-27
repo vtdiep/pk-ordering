@@ -1,4 +1,4 @@
-let orders = [];
+let orders:any[] = [];
 
 export const mockedPrismaService = {
   order: {

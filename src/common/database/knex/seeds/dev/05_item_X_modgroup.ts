@@ -3,6 +3,8 @@ import { Knex } from 'knex';
 import { ItemXModgroup } from 'src/common/lib/item_X_modgroup/item_X_modgroup.entity';
 import { Item } from 'src/item/entities/item.entity';
 import { Modgroup } from 'src/modgroup/entities/modgroup.entity';
+// relative import b/c knex seed/migrate doesnt have path mapping when compiling
+import { assertDefinedArray } from '../../../../../utils/etc/assert';
 
 /**
  * Seed for item_X_modgroup
@@ -33,6 +35,8 @@ export async function seed(knex: Knex): Promise<void> {
   let displayOrder = 0;
   let pairedObjects: ItemXModgroup[];
 
+  let knexResultIDs: (number| undefined) []
+
   // Omelettes
   pickMods = ['Salt'];
   pickItems = [
@@ -40,15 +44,19 @@ export async function seed(knex: Knex): Promise<void> {
     'Avocado Cheese Omelette',
     'Cheese Omelette',
   ];
-  modgroupIDs = await knex<Modgroup>('modgroup')
+  knexResultIDs = await knex<Modgroup>('modgroup')
     .select()
     .whereIn('name', pickMods)
     .pluck('mod_id');
-  itemIDs = await knex<Item>('item')
+  assertDefinedArray(knexResultIDs);
+  modgroupIDs = knexResultIDs;
+  knexResultIDs = await knex<Item>('item')
     .select()
     .where('is_standalone', '=', true)
     .whereIn('name', pickItems)
     .pluck('item_id');
+  assertDefinedArray(knexResultIDs);
+  itemIDs = knexResultIDs;
   pairings = cartesianProduct(modgroupIDs)(itemIDs);
   pairedObjects = pairings.map((x) => ({
     mod_id: x[0],
@@ -61,15 +69,19 @@ export async function seed(knex: Knex): Promise<void> {
   // Pancakes
   pickMods = ['Select Butter', 'Choose a topping'];
   pickItems = ['Buckwheat Pancake', 'Wheat Pancake'];
-  modgroupIDs = await knex<Modgroup>('modgroup')
+  knexResultIDs = await knex<Modgroup>('modgroup')
     .select()
     .whereIn('name', pickMods)
     .pluck('mod_id');
-  itemIDs = await knex<Item>('item')
+  assertDefinedArray(knexResultIDs);
+  modgroupIDs = knexResultIDs;
+  knexResultIDs = await knex<Item>('item')
     .select()
     .where('is_standalone', '=', true)
     .whereIn('name', pickItems)
     .pluck('item_id');
+  assertDefinedArray(knexResultIDs);
+  itemIDs = knexResultIDs;
   pairings = cartesianProduct(modgroupIDs)(itemIDs);
   pairedObjects = pairings.map((x) => ({
     mod_id: x[0],

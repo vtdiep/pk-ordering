@@ -33,7 +33,7 @@ export class MenuController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    let result: menu;
+    let result: menu | null;
     result = await this.menuService.findOne(+id);
     return result;
   }
