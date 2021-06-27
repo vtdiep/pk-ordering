@@ -1,4 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import {
+  Context,
+  createMockContext,
+  MockContext,
+} from 'src/utils/types/prisma.context';
+import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
+import { order, Prisma, PrismaClient } from '@prisma/client';
 import { PrismaService } from '../common/database/prisma/prisma.service';
 import { OrderService } from './order.service';
 import { mockedPrismaService } from '../utils/mocks/prisma.service';
@@ -6,14 +13,19 @@ import { CreateOrderDto } from './dto/create-order.dto';
 
 describe('OrderService', () => {
   let service: OrderService;
+  let mockCtx: MockContext;
+  let ctx: Context;
 
   beforeEach(async () => {
+    mockCtx = createMockContext();
+    ctx = mockCtx as unknown as Context;
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OrderService,
         {
-          provide: PrismaService,
-          useValue: mockedPrismaService,
+          provide: PrismaContext,
+          useValue: ctx,
         },
       ],
     }).compile();
@@ -26,21 +38,28 @@ describe('OrderService', () => {
   });
 
   it('example test', async () => {
-    // EXAMPLE for test w/ mocking
-    // this test is not a useful test bc orderService does nothing but a call to the db
-    // so, if we try to test orderService by making a stub/mock, we are effectively testing
-    // the stub/mocking framework.
-    // If we want to test the db call, then we should do it in integration testing
-    // If orderService did something more than a db call, then it would be worth testing here
-    // with a mock/stub for the db call, so that we can verify that orderService actually did something to the db call result
     const orderDTO: CreateOrderDto = {
       email: 'red@gmail.com',
       name: 'Red Color',
       pickup_time: new Date(),
-      amount_paid: 10.01,
+      amount_paid: new Prisma.Decimal(10.01),
       tax: 0.01,
-      details: {},
+      details: {
+        items: [
+          {
+            id: 1,
+            name: 'Hello',
+            price: 10,
+            quantity: 1,
+            mods: [1],
+          },
+        ],
+      },
     };
+    mockCtx.prisma.order.create.mockResolvedValue({
+      ...orderDTO,
+      transaction_token: 'todo',
+    } as Partial<order> as order);
     const newOrder = await service.create(orderDTO);
     expect(newOrder).not.toBe({});
   });

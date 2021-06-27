@@ -1,26 +1,32 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
+import { Context } from 'src/utils/types/prisma.context';
 import { PrismaService } from '../common/database/prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private ctx: PrismaContext) {}
 
   async create(createOrderDto: CreateOrderDto) {
     let { details } = createOrderDto;
 
-    return this.prisma.order.create({
+    let {items} = details
+
+    let dbResults = await this.ctx.prisma.item.findMany()
+
+    return this.ctx.prisma.order.create({
       data: createOrderDto,
     });
   }
 
   async findAll() {
-    return this.prisma.order.findMany();
+    return this.ctx.prisma.order.findMany();
   }
 
   async findOne(id: number) {
-    return this.prisma.order.findUnique({
+    return this.ctx.prisma.order.findUnique({
       where: {
         oid: id,
       },
@@ -28,7 +34,7 @@ export class OrderService {
   }
 
   async update(id: number, updateOrderDto: Prisma.orderUpdateInput) {
-    return this.prisma.order.update({
+    return this.ctx.prisma.order.update({
       where: {
         oid: id,
       },
@@ -37,7 +43,7 @@ export class OrderService {
   }
 
   async remove(id: number) {
-    return this.prisma.order.delete({
+    return this.ctx.prisma.order.delete({
       where: {
         oid: id,
       },
