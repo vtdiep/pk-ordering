@@ -51,7 +51,7 @@ describe('OrderService', () => {
             name: 'Hello',
             price: 10,
             quantity: 1,
-            mods: [1],
+            mods: [{ id: 1, modOpts: [1, 2] }],
           },
         ],
       },

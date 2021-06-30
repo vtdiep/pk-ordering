@@ -7,11 +7,13 @@ import {
   IsInt,
   Min,
   IsString,
+  ValidateNested,
+  IsOptional,
 } from 'class-validator';
 import { OrderDetailModDto } from './order-detail-mod.dto';
 
 export class OrderDetailItemDto implements Prisma.JsonObject {
-  [x: string]: Prisma.JsonValue;
+  [x: string]: Prisma.JsonValue | undefined;
 
   @IsInt()
   @Type(() => Number)
@@ -30,11 +32,9 @@ export class OrderDetailItemDto implements Prisma.JsonObject {
   @Type(() => Number)
   quantity: number;
 
+  @ValidateNested({ each: true })
+  @Type(() => OrderDetailModDto)
   @IsArray()
-  @IsInt({
-    each: true,
-    message: '$property must be an array of integer numbers',
-  })
-  @Type(() => Number)
-  mods: [OrderDetailModDto['id']];
+  @IsOptional()
+  mods?: [OrderDetailModDto];
 }
