@@ -36,5 +36,5 @@ export class OrderDetailItemDto implements Prisma.JsonObject {
   @Type(() => OrderDetailModDto)
   @IsArray()
   @IsOptional()
-  mods?: [OrderDetailModDto];
+  mods?: OrderDetailModDto[];
 }

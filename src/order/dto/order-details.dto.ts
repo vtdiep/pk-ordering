@@ -15,5 +15,5 @@ export class OrderDetailDto implements Prisma.JsonObject {
   @IsNotEmpty()
   @Type(() => OrderDetailItemDto)
   @IsArray()
-  items: [OrderDetailItemDto];
+  items: OrderDetailItemDto[];
 }
