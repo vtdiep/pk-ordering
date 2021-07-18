@@ -1,6 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { Type } from 'class-transformer';
-import { IsArray, IsInt } from 'class-validator';
+import { ArrayNotEmpty, IsArray, IsInt } from 'class-validator';
 
 export class OrderDetailModDto {
   [x: string]: Prisma.JsonValue;
@@ -9,6 +8,7 @@ export class OrderDetailModDto {
   id: number;
 
   @IsArray()
+  @ArrayNotEmpty()
   @IsInt({
     each: true,
     message: '$property must be an array of integer numbers',
