@@ -19,13 +19,13 @@ export class OrderController {
 
   @Post()
   async create(@Body(ValidatorPipe) createOrderDto: CreateOrderDto) {
-    let result: order;
+    let oid: any;
     try {
-      result = await this.orderService.create(createOrderDto);
+      oid = await this.orderService.create(createOrderDto);
     } catch (error) {
       return error;
     }
-    return result;
+    return oid;
   }
 
   @Get()

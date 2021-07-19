@@ -5,16 +5,37 @@ import {
   MockContext,
 } from 'src/utils/types/prisma.context';
 import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
-import { order, Prisma, PrismaClient } from '@prisma/client';
-import { PrismaService } from '../common/database/prisma/prisma.service';
+import { order } from '@prisma/client';
+import { KNEX_CONNECTION } from 'src/common/constants';
+import { knex } from 'knex';
+import { getTracker, MockClient, Tracker } from 'knex-mock-client';
+import { subSeconds } from 'date-fns';
 import { OrderService } from './order.service';
-import { mockedPrismaService } from '../utils/mocks/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { getModgroupDataBaseQuery } from './queries/getModgroupData';
+import { getItemDataBaseQuery } from './queries/getItemData';
+import { getModOptionDataBaseQuery } from './queries/getModOptionData';
+import {
+  makeMockItemData,
+  makeMockModgroupData,
+  makeMockModItemData,
+  makeMockModOptData,
+  makeMockOrder,
+} from './fixtures/mockData';
+// jest.mock('../common/database/knex/knex.service', ()=>{
+//   return { db: knex({client:MockClient})}
+// })
 
 describe('OrderService', () => {
   let service: OrderService;
   let mockCtx: MockContext;
   let ctx: Context;
+  let tracker: Tracker;
+  let modgroupQueryResult: any;
+  let itemQueryResult: any;
+  let modOptionQueryResult: any;
+
+  beforeAll(() => {});
 
   beforeEach(async () => {
     mockCtx = createMockContext();
@@ -27,10 +48,24 @@ describe('OrderService', () => {
           provide: PrismaContext,
           useValue: ctx,
         },
+        {
+          provide: KNEX_CONNECTION,
+          useValue: knex({ client: MockClient }),
+        },
       ],
     }).compile();
 
     service = module.get<OrderService>(OrderService);
+    tracker = getTracker();
+    modOptionQueryResult = tracker.on.any(
+      getModOptionDataBaseQuery().toString(),
+    );
+    itemQueryResult = tracker.on.any(getItemDataBaseQuery().toString());
+    modgroupQueryResult = tracker.on.any(getModgroupDataBaseQuery().toString());
+  });
+
+  afterEach(() => {
+    tracker.reset();
   });
 
   it('should be defined', () => {
@@ -38,29 +73,459 @@ describe('OrderService', () => {
   });
 
   it('example test', async () => {
-    const orderDTO: CreateOrderDto = {
-      email: 'red@gmail.com',
-      name: 'Red Color',
-      pickup_time: new Date(),
-      amount_paid: new Prisma.Decimal(10.01),
-      tax: 0.01,
-      details: {
-        items: [
-          {
-            id: 1,
-            name: 'Hello',
-            price: 10,
-            quantity: 1,
-            mods: [{ id: 1, modOpts: [1, 2] }],
-          },
-        ],
-      },
-    };
+    const orderDTO: CreateOrderDto = makeMockOrder();
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([makeMockModOptData()]);
+
     mockCtx.prisma.order.create.mockResolvedValue({
-      ...orderDTO,
-      transaction_token: 'todo',
+      oid: 1,
     } as Partial<order> as order);
     const newOrder = await service.create(orderDTO);
     expect(newOrder).not.toBe({});
+    expect(newOrder.oid).toBe(1);
   });
+
+  it('should accept multiple seperate entries of the same item', async () => {
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.details.items = [
+        {
+          id: 1,
+          name: 'Hello',
+          price: 3,
+          quantity: 1,
+          mods: [{ id: 1, modifierItemIds: [10] }],
+        },
+        {
+          id: 1,
+          name: 'Hello',
+          price: 3,
+          quantity: 1,
+          mods: [{ id: 1, modifierItemIds: [10] }],
+        },
+      ];
+      draft.amount_paid = 6;
+      draft.tax = 0;
+    });
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([makeMockModOptData()]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    const newOrder = await service.create(orderDTO);
+    expect(newOrder.oid).toBe(1);
+  });
+
+  it('should accept multiple of the same item but different modifiers', async () => {
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.details.items = [
+        {
+          id: 1,
+          name: 'Hello',
+          price: 3,
+          quantity: 1,
+          mods: [{ id: 1, modifierItemIds: [10] }],
+        },
+        {
+          id: 1,
+          name: 'Hello',
+          price: 3,
+          quantity: 1,
+          mods: [{ id: 2, modifierItemIds: [11] }],
+        },
+      ];
+      draft.amount_paid = 3 + 3;
+      draft.tax = 0;
+    });
+
+    modgroupQueryResult.response([
+      makeMockModgroupData(),
+      makeMockModgroupData((draft) => {
+        draft.mod_id = 2;
+      }),
+    ]);
+    let x = [
+      makeMockModItemData(),
+      // add mod item
+      makeMockModItemData((draft) => {
+        draft.item_id = 11;
+      }),
+    ];
+    itemQueryResult.response([
+      // add modgroup to original item
+      makeMockItemData((draft) => {
+        draft.mods.push(2);
+      }),
+      makeMockModItemData(),
+      // add mod item
+      makeMockModItemData((draft) => {
+        draft.item_id = 11;
+      }),
+    ]);
+    modOptionQueryResult.response([
+      makeMockModOptData(),
+      // link moditem to modgroup
+      makeMockModOptData((draft) => {
+        draft.item_id = 11;
+        draft.mod_id = 2;
+      }),
+    ]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    const newOrder = await service.create(orderDTO);
+    expect(newOrder.oid).toBe(1);
+  });
+  it('should not require a modgroup to be selected', async () => {
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.details.items[0].mods = [];
+    });
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([makeMockModOptData()]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    const newOrder = await service.create(orderDTO);
+    expect(newOrder.oid).toBe(1);
+  });
+  it.skip('should throw when no items specified', async () => {});
+  it('should throw when pickup_time is too far in the past; ie > 1min past', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.pickup_time = subSeconds(new Date(), 61);
+    });
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([makeMockModOptData()]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should throw when pickup_time is too far in the future', async () => {
+    throw new Error('tbd');
+  });
+
+  it('should throw when amount_paid incorrect', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.amount_paid = 99;
+    });
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([makeMockModOptData()]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should throw when tax incorrect', async () => {
+    throw new Error('tbd');
+  });
+  it('should throw when requested item doesnt exist', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.details.items[0].id = 2;
+    });
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([makeMockModOptData()]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should throw when requested item is inactive', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder();
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([
+      makeMockItemData((draft) => {
+        draft.item_active = false;
+      }),
+      makeMockModItemData(),
+    ]);
+    modOptionQueryResult.response([makeMockModOptData()]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should throw when requested modgroup doesnt exist', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder();
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([
+      makeMockItemData((draft) => {
+        draft.mods = [];
+      }),
+      makeMockModItemData(),
+    ]);
+    modOptionQueryResult.response([makeMockModOptData()]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should throw when requested modoption doesnt exist', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder();
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([
+      makeMockItemData(),
+      // makeMockModItemData()
+    ]);
+    modOptionQueryResult.response([
+      // makeMockModOptData()
+    ]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should throw when requested modoption is inactive', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder();
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([
+      makeMockItemData(),
+      makeMockModItemData((draft) => {
+        draft.item_active = false;
+      }),
+    ]);
+    modOptionQueryResult.response([
+      makeMockModOptData((draft) => {
+        draft.item_active = false;
+      }),
+    ]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+
+  it('should throw when a submitted item price is incorrect', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.details.items[0].price = 4.25;
+    });
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([makeMockModOptData()]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should throw when required # of modoption selections not met', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder();
+
+    modgroupQueryResult.response([
+      makeMockModgroupData((draft) => {
+        draft.required_selection = 2;
+      }),
+    ]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([
+      makeMockModOptData((draft) => {
+        draft.required_selection = 2;
+      }),
+    ]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should throw when max # of modoption selections exceeded', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.details.items[0].mods = [{ id: 1, modifierItemIds: [10, 10] }];
+    });
+
+    modgroupQueryResult.response([makeMockModgroupData()]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([makeMockModOptData()]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should accept multiple different modgroups on the same item', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.details.items[0].mods = [
+        { id: 1, modifierItemIds: [10] },
+        { id: 2, modifierItemIds: [11] },
+      ];
+    });
+    modgroupQueryResult.response([
+      makeMockModgroupData(),
+      makeMockModgroupData((draftModgroup) => {
+        draftModgroup.mod_id = 2;
+      }),
+    ]);
+    itemQueryResult.response([
+      makeMockItemData((draftItem) => {
+        draftItem.mods = [1, 2];
+      }),
+      makeMockModItemData(),
+      makeMockModItemData((draftModItem) => {
+        draftModItem.item_id = 11;
+      }),
+    ]);
+    modOptionQueryResult.response([
+      makeMockModOptData(),
+      makeMockModOptData((draftModOpt) => {
+        draftModOpt.item_id = 11;
+        draftModOpt.mod_id = 2;
+      }),
+    ]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    const newOrder = await service.create(orderDTO);
+    expect(newOrder.oid).toBe(1);
+  });
+  it('should throw when the same modgroup is repeated on the same item', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.details.items[0].mods = [
+        { id: 1, modifierItemIds: [10] },
+        { id: 1, modifierItemIds: [10] },
+      ];
+    });
+
+    modgroupQueryResult.response([
+      makeMockModgroupData((draft) => {
+        draft.max_selection = 2;
+        draft.max_single_select = 2;
+        draft.free_selection = 2;
+      }),
+    ]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([
+      makeMockModOptData((draft) => {
+        draft.max_selection = 2;
+        draft.max_single_select = 2;
+        draft.free_selection = 2;
+      }),
+    ]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should throw when max # of single modoption selections exceeded', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.details.items[0].mods = [{ id: 1, modifierItemIds: [10, 10] }];
+    });
+
+    modgroupQueryResult.response([
+      makeMockModgroupData((draft) => {
+        draft.max_selection = 3;
+      }),
+    ]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([
+      makeMockModOptData((draft) => {
+        draft.max_selection = 3;
+      }),
+    ]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    await expect(service.create(orderDTO)).rejects.toThrowError();
+  });
+  it('should calculate correct price when modoptions are not free', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.amount_paid = 7.01;
+    });
+
+    modgroupQueryResult.response([
+      makeMockModgroupData((draft) => {
+        draft.free_selection = 0;
+        draft.price = '4';
+      }),
+    ]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([
+      makeMockModOptData((draft) => {
+        draft.free_selection = 0;
+        draft.mod_price = '4';
+      }),
+    ]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    const newOrder = await service.create(orderDTO);
+    expect(newOrder.oid).toBe(1);
+  });
+  it('should calculate correct price when # of free modoptions exceeded', async () => {
+    expect.assertions(1);
+    const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
+      draft.details.items[0].mods = [{ id: 1, modifierItemIds: [10, 10] }];
+      draft.amount_paid = 5.01;
+    });
+
+    modgroupQueryResult.response([
+      makeMockModgroupData((draftModgroup) => {
+        draftModgroup.max_single_select = 2;
+        draftModgroup.max_selection = 2;
+        draftModgroup.price = '2';
+      }),
+    ]);
+    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    modOptionQueryResult.response([
+      makeMockModOptData((draftModopt) => {
+        draftModopt.max_selection = 2;
+        draftModopt.max_single_select = 2;
+        draftModopt.mod_price = '2';
+      }),
+    ]);
+
+    mockCtx.prisma.order.create.mockResolvedValue({
+      oid: 1,
+    } as Partial<order> as order);
+    const newOrder = await service.create(orderDTO);
+    expect(newOrder.oid).toBe(1);
+  });
+  it.skip('should throw when requested modgroup is inactive', async () => {});
+  it.skip('should throw when details is empty', async () => {});
+  it.skip('should throw when details is missing', async () => {});
+  it.skip('should throw when details.items is missing', async () => {});
+  it.skip('should throw when details.items is empty', async () => {});
+  it.skip('should throw when mod requested but no modoption specified', async () => {});
 });
