@@ -13,5 +13,5 @@ export class OrderDetailModDto {
     each: true,
     message: '$property must be an array of integer numbers',
   })
-  modOpts: number[];
+  modifierItemIds: number[];
 }
