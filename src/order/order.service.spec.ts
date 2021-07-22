@@ -18,7 +18,6 @@ import { getModOptionDataBaseQuery } from './queries/getModOptionData';
 import {
   makeMockItemData,
   makeMockModgroupData,
-  makeMockModItemData,
   makeMockModOptData,
   makeMockOrder,
 } from './fixtures/mockData';
@@ -76,7 +75,7 @@ describe('OrderService', () => {
     const orderDTO: CreateOrderDto = makeMockOrder();
 
     modgroupQueryResult.response([makeMockModgroupData()]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([makeMockModOptData()]);
 
     mockCtx.prisma.order.create.mockResolvedValue({
@@ -110,7 +109,7 @@ describe('OrderService', () => {
     });
 
     modgroupQueryResult.response([makeMockModgroupData()]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([makeMockModOptData()]);
 
     mockCtx.prisma.order.create.mockResolvedValue({
@@ -148,22 +147,10 @@ describe('OrderService', () => {
         draft.mod_id = 2;
       }),
     ]);
-    let x = [
-      makeMockModItemData(),
-      // add mod item
-      makeMockModItemData((draft) => {
-        draft.item_id = 11;
-      }),
-    ];
     itemQueryResult.response([
       // add modgroup to original item
       makeMockItemData((draft) => {
         draft.mods.push(2);
-      }),
-      makeMockModItemData(),
-      // add mod item
-      makeMockModItemData((draft) => {
-        draft.item_id = 11;
       }),
     ]);
     modOptionQueryResult.response([
@@ -187,7 +174,7 @@ describe('OrderService', () => {
     });
 
     modgroupQueryResult.response([makeMockModgroupData()]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([makeMockModOptData()]);
 
     mockCtx.prisma.order.create.mockResolvedValue({
@@ -204,7 +191,7 @@ describe('OrderService', () => {
     });
 
     modgroupQueryResult.response([makeMockModgroupData()]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([makeMockModOptData()]);
 
     mockCtx.prisma.order.create.mockResolvedValue({
@@ -223,7 +210,7 @@ describe('OrderService', () => {
     });
 
     modgroupQueryResult.response([makeMockModgroupData()]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([makeMockModOptData()]);
 
     mockCtx.prisma.order.create.mockResolvedValue({
@@ -241,7 +228,7 @@ describe('OrderService', () => {
     });
 
     modgroupQueryResult.response([makeMockModgroupData()]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([makeMockModOptData()]);
 
     mockCtx.prisma.order.create.mockResolvedValue({
@@ -258,7 +245,6 @@ describe('OrderService', () => {
       makeMockItemData((draft) => {
         draft.item_active = false;
       }),
-      makeMockModItemData(),
     ]);
     modOptionQueryResult.response([makeMockModOptData()]);
 
@@ -276,7 +262,6 @@ describe('OrderService', () => {
       makeMockItemData((draft) => {
         draft.mods = [];
       }),
-      makeMockModItemData(),
     ]);
     modOptionQueryResult.response([makeMockModOptData()]);
 
@@ -290,10 +275,7 @@ describe('OrderService', () => {
     const orderDTO: CreateOrderDto = makeMockOrder();
 
     modgroupQueryResult.response([makeMockModgroupData()]);
-    itemQueryResult.response([
-      makeMockItemData(),
-      // makeMockModItemData()
-    ]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([
       // makeMockModOptData()
     ]);
@@ -308,12 +290,7 @@ describe('OrderService', () => {
     const orderDTO: CreateOrderDto = makeMockOrder();
 
     modgroupQueryResult.response([makeMockModgroupData()]);
-    itemQueryResult.response([
-      makeMockItemData(),
-      makeMockModItemData((draft) => {
-        draft.item_active = false;
-      }),
-    ]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([
       makeMockModOptData((draft) => {
         draft.item_active = false;
@@ -333,7 +310,7 @@ describe('OrderService', () => {
     });
 
     modgroupQueryResult.response([makeMockModgroupData()]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([makeMockModOptData()]);
 
     mockCtx.prisma.order.create.mockResolvedValue({
@@ -350,7 +327,7 @@ describe('OrderService', () => {
         draft.required_selection = 2;
       }),
     ]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([
       makeMockModOptData((draft) => {
         draft.required_selection = 2;
@@ -369,7 +346,7 @@ describe('OrderService', () => {
     });
 
     modgroupQueryResult.response([makeMockModgroupData()]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([makeMockModOptData()]);
 
     mockCtx.prisma.order.create.mockResolvedValue({
@@ -394,10 +371,6 @@ describe('OrderService', () => {
     itemQueryResult.response([
       makeMockItemData((draftItem) => {
         draftItem.mods = [1, 2];
-      }),
-      makeMockModItemData(),
-      makeMockModItemData((draftModItem) => {
-        draftModItem.item_id = 11;
       }),
     ]);
     modOptionQueryResult.response([
@@ -430,7 +403,7 @@ describe('OrderService', () => {
         draft.free_selection = 2;
       }),
     ]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([
       makeMockModOptData((draft) => {
         draft.max_selection = 2;
@@ -455,7 +428,7 @@ describe('OrderService', () => {
         draft.max_selection = 3;
       }),
     ]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([
       makeMockModOptData((draft) => {
         draft.max_selection = 3;
@@ -479,7 +452,7 @@ describe('OrderService', () => {
         draft.price = '4';
       }),
     ]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([
       makeMockModOptData((draft) => {
         draft.free_selection = 0;
@@ -507,7 +480,7 @@ describe('OrderService', () => {
         draftModgroup.price = '2';
       }),
     ]);
-    itemQueryResult.response([makeMockItemData(), makeMockModItemData()]);
+    itemQueryResult.response([makeMockItemData()]);
     modOptionQueryResult.response([
       makeMockModOptData((draftModopt) => {
         draftModopt.max_selection = 2;

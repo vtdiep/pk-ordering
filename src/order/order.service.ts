@@ -366,10 +366,19 @@ function checkRequestedMods(
     let costOfModifier = 0;
     modError = new ModError(requestedMod.id, modgroupData[requestedModId].name);
 
+    let modifierOptionByItemId: { [item_id: number]: OrderModOptDataEntity } =
+      modOptData.reduce(
+        (acc, val) => ({
+          ...acc,
+          [val.item_id]: val,
+        }),
+        {},
+      );
+
     let validModOpts = requestedModifierItemIds.every(
       (requestedModOpt) =>
         modToModOptMap[requestedModId].includes(requestedModOpt) &&
-        itemDataDictByItemId[requestedModOpt].item_active,
+        modifierOptionByItemId[requestedModOpt].item_active,
     );
 
     if (!validModOpts) {

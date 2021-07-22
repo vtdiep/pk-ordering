@@ -47,22 +47,6 @@ export function makeMockItemData(
   return produce(defaults, partial);
 }
 
-export function makeMockModItemData(
-  partial?: (draft: Draft<OrderItemDataEntity>) => void,
-): OrderItemDataEntity {
-  const defaults: OrderItemDataEntity = {
-    item_id: 10,
-    item_name: 'Butter',
-    item_price: '2.50',
-    item_active: true,
-    mods: [],
-  };
-  if (partial === undefined) {
-    return defaults;
-  }
-  return produce(defaults, partial);
-}
-
 export function makeMockModgroupData(
   partial?: (draft: Draft<ModgroupS>) => void,
 ): ModgroupS {
