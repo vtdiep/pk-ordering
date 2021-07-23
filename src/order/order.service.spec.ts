@@ -10,6 +10,7 @@ import { KNEX_CONNECTION } from 'src/common/constants';
 import { knex } from 'knex';
 import { getTracker, MockClient, Tracker } from 'knex-mock-client';
 import { subSeconds } from 'date-fns';
+import { StoreConfirmationGateway } from 'src/store-confirmation/store-confirmation.gateway';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { getModgroupDataBaseQuery } from './queries/getModgroupData';
@@ -34,6 +35,10 @@ describe('OrderService', () => {
   let itemQueryResult: any;
   let modOptionQueryResult: any;
 
+  const MockStoreConfirmationGateway = {
+    notifyOfNewOrder() {},
+  };
+
   beforeAll(() => {});
 
   beforeEach(async () => {
@@ -50,6 +55,10 @@ describe('OrderService', () => {
         {
           provide: KNEX_CONNECTION,
           useValue: knex({ client: MockClient }),
+        },
+        {
+          provide: StoreConfirmationGateway,
+          useValue: MockStoreConfirmationGateway,
         },
       ],
     }).compile();

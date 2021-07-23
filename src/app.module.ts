@@ -9,6 +9,7 @@ import { ItemModule } from './item/item.module';
 import { ModgroupModule } from './modgroup/modgroup.module';
 import { MenuXCategoryModule } from './menu-x-category/menu-x-category.module';
 import { CategoryXItemModule } from './category-x-item/category-x-item.module';
+import { StoreConfirmationModule } from './store-confirmation/store-confirmation.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CategoryXItemModule } from './category-x-item/category-x-item.module';
     ModgroupModule,
     MenuXCategoryModule,
     CategoryXItemModule,
+    StoreConfirmationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

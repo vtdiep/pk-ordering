@@ -5,6 +5,8 @@ import { Knex } from 'knex';
 import { chain, uniq } from 'lodash';
 import { KNEX_CONNECTION } from 'src/common/constants';
 import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
+import { StoreOrderEntity } from 'src/store-confirmation/dto/store-order.entity';
+import { StoreConfirmationGateway } from '../store-confirmation/store-confirmation.gateway';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderDetailItemDto } from './dto/order-detail-item.dto';
 import { OrderDetailModDto } from './dto/order-detail-mod.dto';
@@ -23,6 +25,7 @@ export class OrderService {
   constructor(
     private ctx: PrismaContext,
     @Inject(KNEX_CONNECTION) private knex: Knex,
+    private storeGateway: StoreConfirmationGateway,
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
@@ -159,8 +162,19 @@ export class OrderService {
     // return receipt
     // let oid = await this.knex<Order>('order').insert(createOrderDto).returning('oid').first()
     // return oid
+
+    let storeOrderEntity = new StoreOrderEntity(
+      createOrderDto,
+      itemDataDictByItemId,
+      modData,
+      modOptData,
+      'abc',
+    );
+
+    await this.storeGateway.notifyOfNewOrder(storeOrderEntity);
+
     return await this.ctx.prisma.order.create({
-      data: createOrderDto,
+      data: storeOrderEntity,
       select: {
         oid: true,
       },
