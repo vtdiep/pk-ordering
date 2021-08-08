@@ -11,6 +11,7 @@ import { MenuXCategoryModule } from './menu-x-category/menu-x-category.module';
 import { CategoryXItemModule } from './category-x-item/category-x-item.module';
 import { StoreConfirmationModule } from './store-confirmation/store-confirmation.module';
 import { AuthModule } from './auth/auth.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuthModule } from './auth/auth.module';
     CategoryXItemModule,
     StoreConfirmationModule,
     AuthModule,
+    StripeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
