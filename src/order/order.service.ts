@@ -29,6 +29,51 @@ export class OrderService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
+    let {
+      orderErr,
+      itemDataDictByItemId,
+      modData,
+      modOptData,
+    }: {
+      orderErr: OrderError;
+      itemDataDictByItemId: { [x: number]: OrderItemDataEntity };
+      modData: OrderModgroupDataEntity;
+      modOptData: OrderModOptDataEntity[];
+    } = await this.validate(createOrderDto);
+
+    if (orderErr.orderErr.length > 0 || orderErr.itemErrors.length > 0) {
+      console.log(orderErr.orderErr);
+      console.log(`${JSON.stringify(orderErr.itemErrors)}`);
+      throw new BadRequestException('Invalid order');
+    }
+
+    // charge credit card
+
+    // save info into db
+
+    // return receipt
+    // let oid = await this.knex<Order>('order').insert(createOrderDto).returning('oid').first()
+    // return oid
+
+    let storeOrderEntity = new StoreOrderEntity(
+      createOrderDto,
+      itemDataDictByItemId,
+      modData,
+      modOptData,
+      'abc',
+    );
+
+    await this.storeGateway.notifyOfNewOrder(storeOrderEntity);
+
+    return this.ctx.prisma.order.create({
+      data: storeOrderEntity,
+      select: {
+        oid: true,
+      },
+    });
+  }
+
+  private async validate(createOrderDto: CreateOrderDto) {
     let orderErr = new OrderError();
 
     let { items: requestedItems } = createOrderDto.details;
@@ -64,7 +109,6 @@ export class OrderService {
       .groupBy('i.item_id')
       .whereIn('i.item_id', requestedItemIds);
     // console.log(itemData)
-
     let itemDataDictByItemId: { [x: number]: OrderItemDataEntity } =
       itemData.reduce(
         (acc, val) => ({
@@ -74,9 +118,8 @@ export class OrderService {
         {},
       );
     // console.log(itemDataDictByItemId);
-
     // todo: review remove properties that are duplicated by modDataRaw
-    let modOptData = await this.knex
+    let modOptData: OrderModOptDataEntity[] = await this.knex
       .select<any, OrderModOptDataEntity[]>([
         'mi.mod_id',
         'mi.item_id',
@@ -132,7 +175,6 @@ export class OrderService {
     }
 
     // verify tax amount
-
     // verify valid pickup time
     let pickupTime =
       typeof createOrderDto.pickup_time === 'string'
@@ -148,37 +190,7 @@ export class OrderService {
       );
       orderErr.orderErr.push('pickup_time too far in the past');
     }
-
-    if (orderErr.orderErr.length > 0 || orderErr.itemErrors.length > 0) {
-      console.log(orderErr.orderErr);
-      console.log(`${JSON.stringify(orderErr.itemErrors)}`);
-      throw new BadRequestException('Invalid order');
-    }
-
-    // charge credit card
-
-    // save info into db
-
-    // return receipt
-    // let oid = await this.knex<Order>('order').insert(createOrderDto).returning('oid').first()
-    // return oid
-
-    let storeOrderEntity = new StoreOrderEntity(
-      createOrderDto,
-      itemDataDictByItemId,
-      modData,
-      modOptData,
-      'abc',
-    );
-
-    await this.storeGateway.notifyOfNewOrder(storeOrderEntity);
-
-    return await this.ctx.prisma.order.create({
-      data: storeOrderEntity,
-      select: {
-        oid: true,
-      },
-    });
+    return { orderErr, itemDataDictByItemId, modData, modOptData };
   }
 
   /**
