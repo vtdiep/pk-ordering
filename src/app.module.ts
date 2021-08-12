@@ -1,5 +1,15 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import {
+  applyRawBodyOnlyTo,
+  JsonBodyMiddleware,
+  RawBodyMiddleware,
+} from '@golevelup/nestjs-webhooks';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { OrderModule } from './order/order.module';
@@ -26,8 +36,17 @@ import { StripeModule } from './stripe/stripe.module';
     StoreConfirmationModule,
     AuthModule,
     StripeModule,
+    JsonBodyMiddleware,
+    RawBodyMiddleware,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    applyRawBodyOnlyTo(consumer, {
+      method: RequestMethod.ALL,
+      path: 'webhook',
+    });
+  }
+}
