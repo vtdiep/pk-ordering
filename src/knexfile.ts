@@ -12,6 +12,7 @@ module.exports = {
     seeds: {
       directory: './common/database/knex/seeds/dev',
     },
+    debug: true
   },
 
   // staging: {
