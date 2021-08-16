@@ -11,7 +11,7 @@ import {
 import { Server } from 'ws';
 import { StoreOrderEntity } from './dto/store-order.entity';
 
-@WebSocketGateway()
+@WebSocketGateway(3001)
 export class StoreConfirmationGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {

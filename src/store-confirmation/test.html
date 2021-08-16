@@ -6,7 +6,7 @@
     let socket
     
     function connect(){
-        socket = new WebSocket("ws://localhost:3000")
+        socket = new WebSocket("ws://localhost:3001")
         socket.addEventListener("open", ev=>{
         console.log(`connection opened`)
     })
