@@ -10,6 +10,7 @@ export class CreateOrderDto extends OmitType(Order, [
   'status',
   'transaction_token',
   'time_placed',
+  'stripe_payment_intent',
 ] as const) {
   email: string;
 

@@ -42,4 +42,7 @@ export class UpdateOrderDto extends OmitType(Order, [] as const) {
 
   @IsOptional()
   details: OrderDetailDto;
+
+  @IsOptional()
+  stripe_payment_intent: string;
 }

@@ -65,6 +65,9 @@ export abstract class OrderBaseEntity
   @Type(() => OrderDetailDto)
   @IsNotEmpty()
   details: Prisma.InputJsonValue;
+
+  @IsString()
+  stripe_payment_intent: string;
 }
 
 export class Order extends OrderBaseEntity {
@@ -91,4 +94,6 @@ export class Order extends OrderBaseEntity {
   status?: order_status | undefined;
 
   details: Prisma.InputJsonValue;
+
+  stripe_payment_intent: string;
 }
