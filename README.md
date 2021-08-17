@@ -87,5 +87,8 @@ Issue source: [related issue](https://github.com/facebook/create-react-app/issue
 ## When schema on database changes
 ```bash
 - npx prisma introspect
+- npx prisma db pull (--force)
 - npx prisma generate
+
+- npx knex seed:run --knexfile ./knexfile
 ```
