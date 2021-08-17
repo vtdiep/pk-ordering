@@ -1,19 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common';
-import dotenv from 'dotenv';
+import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
-import path from 'path';
 import Stripe from 'stripe';
-
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 @Injectable()
 export class StripeService {
+  constructor(private configService: ConfigService) {}
+
   private stripe: Stripe;
 
   async onModuleInit() {
-    this.stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!, {
-      apiVersion: '2020-08-27',
-    });
+    this.stripe = new Stripe(
+      this.configService.get<string>('STRIPE_PRIVATE_KEY', ''),
+      {
+        apiVersion: '2020-08-27',
+      },
+    );
     Logger.log(`Stripe key loaded`, 'Stripe');
   }
 

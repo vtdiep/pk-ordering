@@ -1,18 +1,15 @@
 import { Controller, Post, Req, Res, Headers } from '@nestjs/common';
 import { Response } from 'express';
 import { Stripe } from 'stripe';
-import dotenv from 'dotenv';
-import path from 'path';
+import { ConfigService } from '@nestjs/config';
 import { StripeService } from './stripe.service';
-
-// TODO: use env/ configservice
-
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
-let endpointSecret = process.env.STRIPE_WS_ENDPOINT_SECRET || '';
 
 @Controller('stripe')
 export class StripeController {
-  constructor(private readonly stripeService: StripeService) {}
+  constructor(
+    private readonly stripeService: StripeService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('checkout')
   async login(@Res() res) {
@@ -29,7 +26,11 @@ export class StripeController {
     try {
       event = this.stripeService
         .getStripe()
-        .webhooks.constructEvent(request.body, sig, endpointSecret);
+        .webhooks.constructEvent(
+          request.body,
+          sig,
+          this.configService.get<string>('STRIPE_WS_ENDPOINT_SECRET', ''),
+        );
     } catch (err) {
       // invalid signature
       console.log(`⚠️  Webhook signature verification failed.`, err.message);
