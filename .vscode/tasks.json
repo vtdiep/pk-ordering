@@ -42,7 +42,7 @@
     {
       "label": "Back Debug",
       "type": "shell",
-      "command": "cd src && npm run start:debug",
+      "command": "npm run start:debug",
       "isBackground": true,
       "presentation": {
         "group": "back debug",
