@@ -46,7 +46,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     applyRawBodyOnlyTo(consumer, {
       method: RequestMethod.ALL,
-      path: 'webhook',
+      path: 'stripe/webhook',
     });
   }
 }

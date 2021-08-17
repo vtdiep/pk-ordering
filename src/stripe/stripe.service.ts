@@ -49,7 +49,11 @@ export class StripeService {
 
       cancel_url: `http://localhost:3000/cancel.html`,
     });
-
+    console.log(`pending payment_intent id is ${session.payment_intent}`);
     res.redirect(303, session.url!);
+  }
+
+  getStripe() {
+    return this.stripe;
   }
 }
