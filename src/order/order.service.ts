@@ -19,6 +19,8 @@ import { OrderModOptDataEntity } from './entities/orderModOptData.entity';
 import { ItemError } from './errors/itemError';
 import { ModError } from './errors/modError';
 import { OrderError } from './errors/orderError';
+import { OrderItemDataDict } from './order-item-data-dict.interface';
+import { OrderModoptDataDictByItemId } from './order-modopt-data-dict.interface';
 
 @Injectable()
 export class OrderService {
@@ -36,7 +38,7 @@ export class OrderService {
       modOptData,
     }: {
       orderErr: OrderError;
-      itemDataDictByItemId: { [x: number]: OrderItemDataEntity };
+      itemDataDictByItemId: OrderItemDataDict;
       modData: OrderModgroupDataEntity;
       modOptData: OrderModOptDataEntity[];
     } = await this.validate(createOrderDto);
@@ -109,14 +111,13 @@ export class OrderService {
       .groupBy('i.item_id')
       .whereIn('i.item_id', requestedItemIds);
     // console.log(itemData)
-    let itemDataDictByItemId: { [x: number]: OrderItemDataEntity } =
-      itemData.reduce(
-        (acc, val) => ({
-          ...acc,
-          [val.item_id]: val,
-        }),
-        {},
-      );
+    let itemDataDictByItemId: OrderItemDataDict = itemData.reduce(
+      (acc, val) => ({
+        ...acc,
+        [val.item_id]: val,
+      }),
+      {},
+    );
     // console.log(itemDataDictByItemId);
     // todo: review remove properties that are duplicated by modDataRaw
     let modOptData: OrderModOptDataEntity[] = await this.knex
@@ -206,7 +207,7 @@ export class OrderService {
    */
   private validateItems(
     requestedItems: OrderDetailItemDto[],
-    itemDataDictByItemId: { [x: number]: OrderItemDataEntity },
+    itemDataDictByItemId: OrderItemDataDict,
     orderErr: OrderError,
     modData: OrderModgroupDataEntity,
     modOptData: OrderModOptDataEntity[],
@@ -367,7 +368,7 @@ function checkRequestedMods(
   requestedMods: OrderDetailModDto[],
   modgroupData: OrderModgroupDataEntity,
   modOptData: OrderModOptDataEntity[],
-  itemDataDictByItemId: { [x: number]: OrderItemDataEntity },
+  itemDataDictByItemId: OrderItemDataDict,
 ): { modsCostForItem: number; modErrors: ModError[] } {
   let modsCostForItem: number = 0;
 
