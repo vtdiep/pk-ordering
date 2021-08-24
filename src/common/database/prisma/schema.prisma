@@ -12,8 +12,8 @@ model alt_ordering_hours {
   valid_from  DateTime     @db.Date
   valid_to    DateTime     @db.Date
   day_of_week DAY_OF_WEEK?
-  open_time   DateTime?    @db.Timetz(6)
-  close_time  DateTime?    @db.Timetz(6)
+  open_time   DateTime?    @db.Time(6)
+  close_time  DateTime?    @db.Time(6)
   is_closed   Boolean
 
   @@unique([valid_from, valid_to, day_of_week], name: "alt_ordering_hours_uq")
@@ -131,8 +131,8 @@ model order {
 
 model ordering_hours {
   day_of_week DAY_OF_WEEK
-  open_time   DateTime    @db.Timetz(6)
-  close_time  DateTime    @db.Timetz(6)
+  open_time   DateTime    @db.Time(6)
+  close_time  DateTime    @db.Time(6)
 
   @@unique([day_of_week, open_time, close_time], name: "ordering_hours_entry_uq")
 }
@@ -144,7 +144,7 @@ model store {
 
 model stripe {
   payment_intent String   @id
-  time_started   DateTime @default(now()) @db.Timetz(6)
+  time_started   DateTime @default(now()) @db.Timestamptz(6)
 }
 
 enum DAY_OF_WEEK {
