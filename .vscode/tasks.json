@@ -11,10 +11,10 @@
     {
       "label": "Create terminals",
       "dependsOn": [
-        "Back",
+        "Backend Term",
         "Back Debug",
         "Front Start",
-        "Front"
+        "Frontend Term"
       ],
       // Mark as the default build task so cmd/ctrl+shift+b will create them
       "group": {
@@ -28,10 +28,17 @@
     },
     {
       // The name that shows up in terminal tab
-      "label": "Back",
+      "label": "Backend Term",
       // The task will launch a shell
       "type": "shell",
-      "command": "cd src && bash.exe",
+      "options": {
+        "shell": {
+          "executable": "C:\\Program Files\\Git\\bin\\bash.exe",
+          "args": ["-c"]
+          // -c needed to specify command mode ie we will run commands
+        }
+      },
+      "command":["cd src && exec bash"],
       // Mark as a background task to avoid the spinner animation on the terminal tab
       "isBackground": true,
       // Create the tasks in a terminal group
@@ -58,9 +65,16 @@
       },
     },
     {
-      "label": "Front",
+      "label": "Frontend Term",
       "type": "shell",
-      "command": "cd client && bash.exe",
+      "options": {
+        "shell": {
+          "executable": "C:\\Program Files\\Git\\bin\\bash.exe",
+          "args": ["-c"]
+          // -c needed to specify command mode ie we will run commands
+        }
+      },
+      "command":["cd client && exec bash"],
       "isBackground": true,
       "presentation": {
         "group": "front",
