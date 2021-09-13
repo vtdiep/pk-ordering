@@ -19,13 +19,16 @@ export class OrderController {
 
   @Post()
   async create(@Body(ValidatorPipe) createOrderDto: CreateOrderDto) {
-    let oid: any;
+    let orderSession: any;
     try {
-      oid = await this.orderService.create(createOrderDto);
+      orderSession = await this.orderService.create(createOrderDto);
     } catch (error) {
       return error;
     }
-    return oid;
+    return orderSession;
+    // cannot redirect from server due to possible cors issue with stripe
+    // https://stackoverflow.com/questions/68630229/stripe-checkout-example-running-into-cors-error-from-localhost
+    // res.redirect(303, session_url)
   }
 
   @Get()

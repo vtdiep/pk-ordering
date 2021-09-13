@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { differenceInMinutes, parseISO } from 'date-fns';
 import { Knex } from 'knex';
@@ -6,6 +11,7 @@ import { chain, uniq } from 'lodash';
 import { KNEX_CONNECTION } from 'src/common/constants';
 import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
 import { StoreOrderEntity } from 'src/store-confirmation/dto/store-order.entity';
+import { StripeService } from 'src/stripe/stripe.service';
 import { StoreConfirmationGateway } from '../store-confirmation/store-confirmation.gateway';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderDetailItemDto } from './dto/order-detail-item.dto';
@@ -28,6 +34,7 @@ export class OrderService {
     private ctx: PrismaContext,
     @Inject(KNEX_CONNECTION) private knex: Knex,
     private storeGateway: StoreConfirmationGateway,
+    private stripeService: StripeService,
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
@@ -49,30 +56,40 @@ export class OrderService {
       throw new BadRequestException('Invalid order');
     }
 
-    // charge credit card
+    let modoptDataDict: OrderModoptDataDictByItemId = modOptData.reduce(
+      (acc, val) => ({
+        ...acc,
+        [val.item_id]: val,
+      }),
+      {},
+    );
 
-    // save info into db
-
-    // return receipt
-    // let oid = await this.knex<Order>('order').insert(createOrderDto).returning('oid').first()
-    // return oid
+    let session = await this.stripeService.createSession(
+      createOrderDto,
+      modoptDataDict,
+    );
+    if (!session.payment_intent) {
+      throw new ServiceUnavailableException();
+    }
 
     let storeOrderEntity = new StoreOrderEntity(
       createOrderDto,
       itemDataDictByItemId,
       modData,
       modOptData,
-      'abc',
+      String(session.payment_intent),
     );
 
     await this.storeGateway.notifyOfNewOrder(storeOrderEntity);
 
-    return this.ctx.prisma.order.create({
+    let { oid } = await this.ctx.prisma.order.create({
       data: storeOrderEntity,
       select: {
         oid: true,
       },
     });
+
+    return { url: session.url! };
   }
 
   private async validate(createOrderDto: CreateOrderDto) {
@@ -95,7 +112,7 @@ export class OrderService {
 
     console.log(requestedModIds);
 
-    // get item and moditems
+    // currently gets items only, not moditems
     let itemData = await this.knex
       .select<any, OrderItemDataEntity[]>([
         'i.item_id',
