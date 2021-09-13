@@ -11,9 +11,9 @@ export class StripeController {
     private readonly configService: ConfigService,
   ) {}
 
-  @Post('checkout')
+  @Post('test/checkout')
   async login(@Res() res) {
-    return this.stripeService.create(res);
+    return this.stripeService.create_t(res);
   }
 
   @Post('webhook')

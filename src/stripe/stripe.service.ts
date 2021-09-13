@@ -19,7 +19,7 @@ export class StripeService {
     Logger.log(`Stripe key loaded`, 'Stripe');
   }
 
-  async create(res: Response) {
+  async create_t(res: Response) {
     const session = await this.stripe.checkout.sessions.create({
       payment_intent_data: {
         description: 'Transaction #X',

@@ -97,11 +97,11 @@ const ProductDisplay = () => (
 
     </div>
 
-    <form action="http://localhost:3000/stripe/checkout" method="POST">
+    <form action="http://localhost:3000/stripe/test/checkout" method="POST">
 
       <button type="submit">
 
-        Checkout
+  Test Checkout
 
       </button>
 
