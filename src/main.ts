@@ -28,6 +28,7 @@ async function bootstrap() {
   app.use(passport.initialize());
   app.use(passport.session());
   app.useWebSocketAdapter(new WsAdapter(app));
+  app.enableCors();
 
   await app.listen(3000);
 }
