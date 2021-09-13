@@ -6,6 +6,7 @@ module.exports = {
     node: true,
   },
   extends: [
+    'airbnb',
     'airbnb-typescript',
     'prettier',
   ],
