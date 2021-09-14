@@ -11,6 +11,7 @@ import { knex } from 'knex';
 import { getTracker, MockClient, Tracker } from 'knex-mock-client';
 import { subSeconds } from 'date-fns';
 import { StoreConfirmationGateway } from 'src/store-confirmation/store-confirmation.gateway';
+import { StripeService } from 'src/stripe/stripe.service';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { getModgroupDataBaseQuery } from './queries/getModgroupData';
@@ -39,6 +40,14 @@ describe('OrderService', () => {
     notifyOfNewOrder() {},
   };
 
+  const mockURL = 'http://example.com';
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const payment_intent = 'pi_1234567890';
+
+  const MockStripeService = {
+    createSession: jest.fn(() => ({ payment_intent, url: mockURL })),
+  };
+
   beforeAll(() => {});
 
   beforeEach(async () => {
@@ -59,6 +68,10 @@ describe('OrderService', () => {
         {
           provide: StoreConfirmationGateway,
           useValue: MockStoreConfirmationGateway,
+        },
+        {
+          provide: StripeService,
+          useValue: MockStripeService,
         },
       ],
     }).compile();
@@ -92,7 +105,7 @@ describe('OrderService', () => {
     } as Partial<order> as order);
     const newOrder = await service.create(orderDTO);
     expect(newOrder).not.toBe({});
-    expect(newOrder.oid).toBe(1);
+    expect(newOrder.url).toBe(mockURL);
   });
 
   it('should accept multiple seperate entries of the same item', async () => {
@@ -125,7 +138,7 @@ describe('OrderService', () => {
       oid: 1,
     } as Partial<order> as order);
     const newOrder = await service.create(orderDTO);
-    expect(newOrder.oid).toBe(1);
+    expect(newOrder.url).toBe(mockURL);
   });
 
   it('should accept multiple of the same item but different modifiers', async () => {
@@ -175,7 +188,7 @@ describe('OrderService', () => {
       oid: 1,
     } as Partial<order> as order);
     const newOrder = await service.create(orderDTO);
-    expect(newOrder.oid).toBe(1);
+    expect(newOrder.url).toBe(mockURL);
   });
   it('should not require a modgroup to be selected', async () => {
     const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
@@ -190,7 +203,7 @@ describe('OrderService', () => {
       oid: 1,
     } as Partial<order> as order);
     const newOrder = await service.create(orderDTO);
-    expect(newOrder.oid).toBe(1);
+    expect(newOrder.url).toBe(mockURL);
   });
   it.skip('should throw when no items specified', async () => {});
   it('should throw when pickup_time is too far in the past; ie > 1min past', async () => {
@@ -394,7 +407,7 @@ describe('OrderService', () => {
       oid: 1,
     } as Partial<order> as order);
     const newOrder = await service.create(orderDTO);
-    expect(newOrder.oid).toBe(1);
+    expect(newOrder.url).toBe(mockURL);
   });
   it('should throw when the same modgroup is repeated on the same item', async () => {
     expect.assertions(1);
@@ -473,7 +486,7 @@ describe('OrderService', () => {
       oid: 1,
     } as Partial<order> as order);
     const newOrder = await service.create(orderDTO);
-    expect(newOrder.oid).toBe(1);
+    expect(newOrder.url).toBe(mockURL);
   });
   it('should calculate correct price when # of free modoptions exceeded', async () => {
     expect.assertions(1);
@@ -502,7 +515,7 @@ describe('OrderService', () => {
       oid: 1,
     } as Partial<order> as order);
     const newOrder = await service.create(orderDTO);
-    expect(newOrder.oid).toBe(1);
+    expect(newOrder.url).toBe(mockURL);
   });
   it.skip('should throw when requested modgroup is inactive', async () => {});
   it.skip('should throw when details is empty', async () => {});
