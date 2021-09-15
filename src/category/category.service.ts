@@ -1,25 +1,24 @@
 import { Injectable } from '@nestjs/common';
 
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '../common/database/prisma/prisma.service';
-// Dont forget to import { PrismaService } from somewhere;
+import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
 
 @Injectable()
 export class CategoryService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaCtx: PrismaContext) {}
 
   create(createCategoryDto: Prisma.categoryCreateInput) {
-    return this.prisma.category.create({
+    return this.prismaCtx.prisma.category.create({
       data: createCategoryDto,
     });
   }
 
   findAll() {
-    return this.prisma.category.findMany();
+    return this.prismaCtx.prisma.category.findMany();
   }
 
   findOne(id: number) {
-    return this.prisma.category.findUnique({
+    return this.prismaCtx.prisma.category.findUnique({
       where: {
         category_id: id,
       },
@@ -27,7 +26,7 @@ export class CategoryService {
   }
 
   update(id: number, updateCategoryDto: Prisma.categoryUpdateInput) {
-    return this.prisma.category.update({
+    return this.prismaCtx.prisma.category.update({
       where: {
         category_id: id,
       },
@@ -36,7 +35,7 @@ export class CategoryService {
   }
 
   remove(id: number) {
-    return this.prisma.category.delete({
+    return this.prismaCtx.prisma.category.delete({
       where: {
         category_id: id,
       },

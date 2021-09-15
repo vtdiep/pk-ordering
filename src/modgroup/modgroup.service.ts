@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/common/database/prisma/prisma.service';
+import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
 
 @Injectable()
 export class ModgroupService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaCtx: PrismaContext) {}
 
   create(createModgroupDto: Prisma.modgroupCreateInput) {
-    return this.prisma.modgroup.create({
+    return this.prismaCtx.prisma.modgroup.create({
       data: createModgroupDto,
     });
   }
 
   findAll() {
-    return this.prisma.modgroup.findMany();
+    return this.prismaCtx.prisma.modgroup.findMany();
   }
 
   findOne(id: number) {
-    return this.prisma.modgroup.findUnique({
+    return this.prismaCtx.prisma.modgroup.findUnique({
       where: {
         mod_id: id,
       },
@@ -26,7 +26,7 @@ export class ModgroupService {
   }
 
   update(id: number, updateModgroupDto: Prisma.modgroupUpdateInput) {
-    return this.prisma.modgroup.update({
+    return this.prismaCtx.prisma.modgroup.update({
       where: {
         mod_id: id,
       },
@@ -35,7 +35,7 @@ export class ModgroupService {
   }
 
   remove(id: number) {
-    return this.prisma.modgroup.delete({
+    return this.prismaCtx.prisma.modgroup.delete({
       where: {
         mod_id: id,
       },

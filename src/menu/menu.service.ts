@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/common/database/prisma/prisma.service';
+import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
 
 @Injectable()
 export class MenuService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaCtx: PrismaContext) {}
 
   create(createMenuDto: Prisma.menuCreateInput) {
-    return this.prisma.menu.create({
+    return this.prismaCtx.prisma.menu.create({
       data: createMenuDto,
     });
   }
 
   findAll() {
-    return this.prisma.menu.findMany();
+    return this.prismaCtx.prisma.menu.findMany();
   }
 
   findOne(id: number) {
-    return this.prisma.menu.findUnique({
+    return this.prismaCtx.prisma.menu.findUnique({
       where: {
         menu_id: id,
       },
@@ -26,7 +26,7 @@ export class MenuService {
   }
 
   update(id: number, updateMenuDto: Prisma.menuUpdateInput) {
-    return this.prisma.menu.update({
+    return this.prismaCtx.prisma.menu.update({
       where: {
         menu_id: id,
       },
@@ -35,7 +35,7 @@ export class MenuService {
   }
 
   remove(id: number) {
-    return this.prisma.menu.delete({
+    return this.prismaCtx.prisma.menu.delete({
       where: {
         menu_id: id,
       },

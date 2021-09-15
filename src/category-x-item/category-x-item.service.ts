@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/common/database/prisma/prisma.service';
+import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
 
 @Injectable()
 export class CategoryXItemService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaCtx: PrismaContext) {}
 
   create(createCategoryXItemDto: Prisma.category_X_itemUncheckedCreateInput) {
-    return this.prisma.category_X_item.create({
+    return this.prismaCtx.prisma.category_X_item.create({
       data: createCategoryXItemDto,
     });
   }
 
   findAll() {
-    return this.prisma.category_X_item.findMany();
+    return this.prismaCtx.prisma.category_X_item.findMany();
   }
 
   findOne(category_id: number, item_id: number) {
-    return this.prisma.category_X_item.findUnique({
+    return this.prismaCtx.prisma.category_X_item.findUnique({
       where: {
         category_id_item_id: {
           category_id,
@@ -35,7 +35,7 @@ export class CategoryXItemService {
   ) {
     let result;
     try {
-      result = this.prisma.category_X_item.update({
+      result = this.prismaCtx.prisma.category_X_item.update({
         where: {
           category_id_item_id: {
             category_id,
@@ -51,7 +51,7 @@ export class CategoryXItemService {
   }
 
   remove(category_id: number, item_id: number) {
-    return this.prisma.category_X_item.delete({
+    return this.prismaCtx.prisma.category_X_item.delete({
       where: {
         category_id_item_id: {
           category_id,

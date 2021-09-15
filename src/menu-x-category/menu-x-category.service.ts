@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/common/database/prisma/prisma.service';
+import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
 
 @Injectable()
 export class MenuXCategoryService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaCtx: PrismaContext) {}
 
   create(createMenuXCategoryDto: Prisma.menu_X_categoryUncheckedCreateInput) {
-    return this.prisma.menu_X_category.create({
+    return this.prismaCtx.prisma.menu_X_category.create({
       data: createMenuXCategoryDto,
     });
   }
 
   findAll() {
-    return this.prisma.menu_X_category.findMany();
+    return this.prismaCtx.prisma.menu_X_category.findMany();
   }
 
   findOne(menu_id: number, category_id: number) {
-    return this.prisma.menu_X_category.findUnique({
+    return this.prismaCtx.prisma.menu_X_category.findUnique({
       where: {
         category_id_category_menu_id_menu: {
           category_id_category: category_id,
@@ -33,7 +33,7 @@ export class MenuXCategoryService {
     category_id: number,
     updateMenuXCategoryDto: Prisma.menu_X_categoryUncheckedUpdateInput,
   ) {
-    return this.prisma.menu_X_category.update({
+    return this.prismaCtx.prisma.menu_X_category.update({
       where: {
         category_id_category_menu_id_menu: {
           category_id_category: category_id,
@@ -45,7 +45,7 @@ export class MenuXCategoryService {
   }
 
   remove(menu_id: number, category_id: number) {
-    return this.prisma.menu_X_category.delete({
+    return this.prismaCtx.prisma.menu_X_category.delete({
       where: {
         category_id_category_menu_id_menu: {
           category_id_category: category_id,

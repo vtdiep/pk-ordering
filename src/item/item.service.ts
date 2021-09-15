@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/common/database/prisma/prisma.service';
+import { PrismaContext } from 'src/common/database/prisma/prisma.context.service';
 
 @Injectable()
 export class ItemService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaCtx: PrismaContext) {}
 
   create(createItemDto: Prisma.itemCreateInput) {
-    return this.prisma.item.create({
+    return this.prismaCtx.prisma.item.create({
       data: createItemDto,
     });
   }
 
   findAll() {
-    return this.prisma.item.findMany();
+    return this.prismaCtx.prisma.item.findMany();
   }
 
   findOne(id: number) {
-    return this.prisma.item.findUnique({
+    return this.prismaCtx.prisma.item.findUnique({
       where: {
         item_id: id,
       },
@@ -26,7 +26,7 @@ export class ItemService {
   }
 
   update(id: number, updateItemDto: Prisma.itemUpdateInput) {
-    return this.prisma.item.update({
+    return this.prismaCtx.prisma.item.update({
       where: {
         item_id: id,
       },
@@ -35,7 +35,7 @@ export class ItemService {
   }
 
   remove(id: number) {
-    return this.prisma.item.delete({
+    return this.prismaCtx.prisma.item.delete({
       where: {
         item_id: id,
       },
