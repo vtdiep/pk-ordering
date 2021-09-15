@@ -19,7 +19,7 @@ export class OrderController {
 
   @Post()
   async create(@Body(ValidatorPipe) createOrderDto: CreateOrderDto) {
-    let orderSession: any;
+    let orderSession: { url: string };
     try {
       orderSession = await this.orderService.create(createOrderDto);
     } catch (error) {
