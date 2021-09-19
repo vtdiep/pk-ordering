@@ -46,14 +46,18 @@ function App() {
 
 export default App;
 
-const Message = ({ message }) => (
+interface MessageProps {
+  message: string
+}
+
+const Message = ({ message }: MessageProps )=> (
   <section>
     <p>{message}</p>
   </section>
 );
 
 const ProductDisplay = () => {
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('og post blocked');
     let data = {
