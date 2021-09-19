@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { Header } from './components/Header';
+import { MenuContainer } from './components/MenuContainer';
+import { ViewCheckoutButton } from './components/ViewCheckoutButton';
+import { Nav } from './components/Nav';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -25,7 +28,17 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <img src="http://placekitten.com/500/500" alt="Hero Image" />
+      <img
+        id="hero_image"
+        src="http://placekitten.com/1920/500"
+        alt="Hero Image"
+      />
+      <div className="store">
+        <Nav />
+        <MenuContainer />
+        <ViewCheckoutButton />
+      </div>
+
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -50,10 +63,10 @@ function App() {
 export default App;
 
 interface MessageProps {
-  message: string
+  message: string;
 }
 
-const Message = ({ message }: MessageProps )=> (
+const Message = ({ message }: MessageProps) => (
   <section>
     <p>{message}</p>
   </section>
@@ -104,7 +117,7 @@ const ProductDisplay = () => {
     <section>
       <div className="product">
         <img
-          src="https://i.imgur.com/EHyR2nP.png"
+          src="http://placekitten.com/200/200"
           alt="The cover of Stubborn Attachments"
         />
 

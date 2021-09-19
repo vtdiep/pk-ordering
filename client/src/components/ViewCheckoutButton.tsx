@@ -1,8 +1,25 @@
+import styled from 'styled-components';
+
+const StyledViewCheckoutButton = styled.div`
+  grid-column: 1 / span 4;
+  grid-row-start: 3;
+  background-color: salmon;
+`;
+
+const StyledSpan = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 20px;
+`;
+
 export const ViewCheckoutButton = () => {
-    return (
-        <div>
-            <h3>Checkout</h3>
-            <p>Item Count</p>
-        </div>
-    )
-}
+  return (
+    <StyledViewCheckoutButton>
+      <StyledSpan>
+        <h3>Checkout</h3>
+        <p>Item Count</p>
+      </StyledSpan>
+    </StyledViewCheckoutButton>
+  );
+};
