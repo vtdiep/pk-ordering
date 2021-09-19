@@ -1,16 +1,17 @@
 import styled from 'styled-components';
 
-const StyledMenuItemCard = styled.div`
+export const StyledMenuItemCard = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
 
-  background-color: slategray;
+  background-color: #ebeaea;
   align-self: center;
   /* justify-self: center; */
-  border: rebeccapurple 1px solid;
+  border: #7e6e69 1px solid;
   /* margin-left: auto;
   margin-right: auto; */
+
   max-width: 640px;
   width: 100%;
 

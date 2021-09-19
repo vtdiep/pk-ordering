@@ -5,7 +5,7 @@ const StyledMenuContainer = styled.div`
   grid-column: 2 / span 2;
   display: flex;
   flex-direction: column;
-  row-gap: 50px;
+  /* row-gap: 50px; */
 
   @media (min-width: 320px) {
     grid-column: 1 / span 4;
