@@ -28,11 +28,12 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <img
-        id="hero_image"
-        src="http://placekitten.com/1920/500"
-        alt="Hero Image"
-      />
+      <div id="hero_image_container">
+        <picture>
+          <img id="hero_image" src="pekoe_2000.jpg" alt="" />
+        </picture>
+      </div>
+
       <div className="store">
         <Nav />
         <MenuContainer />

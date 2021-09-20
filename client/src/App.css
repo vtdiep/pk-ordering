@@ -52,7 +52,17 @@ html {
   grid-template-columns: repeat(4, 1fr);
 }
 
-#hero_image{
-  width:50vw;
+#hero_image_container{
+  /* width: 100vw; */
+
 }
+
+#hero_image{
+  width: 100%;
+  object-fit: cover;
+  max-height: 480px;
+  /* This controls where the image is resized from; ie focal point */
+  object-position: center center;
+}
+
 
