@@ -53,8 +53,9 @@ html {
 }
 
 #hero_image_container{
-  /* width: 100vw; */
+}
 
+#hero_image_container > picture {
 }
 
 #hero_image{
@@ -63,6 +64,8 @@ html {
   max-height: 480px;
   /* This controls where the image is resized from; ie focal point */
   object-position: center center;
+  /* gets rid of hanging whitespace below image */
+  display:block
 }
 
 
