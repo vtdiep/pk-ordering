@@ -22,6 +22,7 @@ const StyledH1 = styled.h1`
   flex: 1;
   text-align: left;
   margin: 0px;
+  font-size: clamp(1.5em, 4vw, 2.5em);
 `;
 
 const P = styled.p`
