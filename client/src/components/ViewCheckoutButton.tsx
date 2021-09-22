@@ -4,6 +4,8 @@ const StyledViewCheckoutButton = styled.div`
   grid-column: 1 / span 4;
   grid-row-start: 3;
   background-color: salmon;
+  position: sticky;
+  bottom: 0;
 `;
 
 const StyledSpan = styled.span`

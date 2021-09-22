@@ -37,8 +37,9 @@ function App() {
       <div className="store">
         <Nav />
         <MenuContainer />
-        <ViewCheckoutButton />
       </div>
+
+      <ViewCheckoutButton />
 
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
