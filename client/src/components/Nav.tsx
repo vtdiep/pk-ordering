@@ -6,6 +6,10 @@ const StyledNav = styled.nav`
   border-bottom: 1px solid grey;
   padding-top: 5px;
   padding-bottom: 5px;
+
+  position: sticky;
+  top: 0;
+  background-color: #f7f7f7;
 `;
 
 const StyledUL = styled.ul`
