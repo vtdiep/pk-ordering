@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
+import pklogo from './pokemainlogo-crop.png';
 import './App.css';
 import { Header } from './components/Header';
 import { MenuContainer } from './components/MenuContainer';
@@ -42,7 +43,7 @@ function App() {
       <ViewCheckoutButton />
 
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={pklogo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
