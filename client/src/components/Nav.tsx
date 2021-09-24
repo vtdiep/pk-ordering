@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 const StyledNav = styled.nav`
   grid-column: 1 / span 4;
-  border-top: 1px solid grey;
   border-bottom: 1px solid grey;
   padding-top: 5px;
   padding-bottom: 5px;

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const StyledViewCheckoutButton = styled.div`
   grid-column: 1 / span 4;
   grid-row-start: 3;
-  background-color: salmon;
+  background-color: #fff;
   position: sticky;
   bottom: 0;
 `;
