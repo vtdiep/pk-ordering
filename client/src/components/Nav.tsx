@@ -9,10 +9,11 @@ const StyledNav = styled.nav`
   position: sticky;
   top: 0;
   background-color: #f7f7f7;
+  overflow-y: scroll;
 `;
 
 const StyledUL = styled.ul`
-  display: flex;
+  display: inline-flex;
   list-style-type: none;
   column-gap: 20px;
   background-color: #e4e4e4;
@@ -20,6 +21,7 @@ const StyledUL = styled.ul`
   margin-left: auto;
   margin-right: auto;
   padding: 10px 10px 0 10px;
+  white-space: nowrap;
 
   & li {
     display: flex;
@@ -47,6 +49,7 @@ export const Nav = () => {
         <StyledUL>
           <li>Navigation Text</li>
           <li>Nav2</li>
+          <li>Navigation Text Long Long Long</li>
           <li>Navigation Text Long Long Long</li>
         </StyledUL>
       </ULContainer>
