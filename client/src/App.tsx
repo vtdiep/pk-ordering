@@ -3,9 +3,8 @@ import logo from './logo.svg';
 import pklogo from './pokemainlogo-crop.png';
 import './App.css';
 import { Header } from './components/Header';
-import { MenuContainer } from './components/MenuContainer';
 import { ViewCheckoutButton } from './components/ViewCheckoutButton';
-import { Nav } from './components/Nav';
+import { Store } from './components/Store';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -35,10 +34,7 @@ function App() {
         </picture>
       </div>
 
-      <div className="store">
-        <Nav />
-        <MenuContainer />
-      </div>
+      <Store></Store>
 
       <ViewCheckoutButton />
 

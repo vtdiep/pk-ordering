@@ -48,10 +48,6 @@ html {
   }
 }
 
-.store {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
 
 #hero_image_container{
 }
