@@ -79,7 +79,7 @@
     "husky": "^7.0.2",
     "immer": "^9.0.5",
     "jest": "^27.0.6",
-    "jest-mock-extended": "^2.0.1",
+    "jest-mock-extended": "^2.0.4",
     "knex-mock-client": "^1.5.1",
     "lint-staged": "^11.0.1",
     "prettier": "^2.3.2",
