@@ -16,12 +16,12 @@ model alt_ordering_hours {
   close_time  DateTime?    @db.Time(6)
   is_closed   Boolean
 
-  @@unique([valid_from, valid_to, day_of_week], name: "alt_ordering_hours_uq")
+  @@unique([valid_from, valid_to, day_of_week], map: "alt_ordering_hours_uq")
   @@ignore
 }
 
 model category {
-  category_id     Int               @id @default(autoincrement())
+  category_id     Int               @id(map: "category_pk") @default(autoincrement())
   name            String?
   description     String?
   active          Boolean           @default(true)
@@ -34,14 +34,14 @@ model category_X_item {
   category_id   Int
   item_id       Int
   display_order Int      @db.SmallInt
-  category      category @relation(fields: [category_id], references: [category_id])
-  item          item     @relation(fields: [item_id], references: [item_id])
+  category      category @relation(fields: [category_id], references: [category_id], onDelete: NoAction, onUpdate: NoAction, map: "category_id_fk")
+  item          item     @relation(fields: [item_id], references: [item_id], onDelete: NoAction, onUpdate: NoAction, map: "item_id_fk")
 
-  @@id([category_id, item_id])
+  @@id([category_id, item_id], map: "category_X_item_pk")
 }
 
 model item {
-  item_id         Int               @id @default(autoincrement())
+  item_id         Int               @id(map: "item_pk") @default(autoincrement())
   name            String
   description     String?
   active          Boolean           @default(true)
@@ -52,7 +52,7 @@ model item {
   item_X_modgroup item_X_modgroup[]
   modgroup_item   modgroup_item[]
 
-  @@unique([item_id, is_standalone], name: "item_id_standalone_uq")
+  @@unique([item_id, is_standalone], map: "item_id_standalone_uq")
 }
 
 model item_X_modgroup {
@@ -60,14 +60,14 @@ model item_X_modgroup {
   mod_id             Int
   item_is_standalone Boolean  @default(false)
   display_order      Int      @db.SmallInt
-  item               item     @relation(fields: [item_id, item_is_standalone], references: [item_id, is_standalone])
-  modgroup           modgroup @relation(fields: [mod_id], references: [mod_id])
+  item               item     @relation(fields: [item_id, item_is_standalone], references: [item_id, is_standalone], onDelete: NoAction, onUpdate: NoAction, map: "item_is_standalone_fk")
+  modgroup           modgroup @relation(fields: [mod_id], references: [mod_id], onDelete: NoAction, onUpdate: NoAction, map: "mod_id_fk")
 
-  @@id([item_id, mod_id])
+  @@id([item_id, mod_id], map: "item_X_modgroup_pk")
 }
 
 model menu {
-  menu_id         Int               @id @default(autoincrement())
+  menu_id         Int               @id(map: "menu_pk") @default(autoincrement())
   name            String?
   display_order   Int               @db.SmallInt
   active          Boolean           @default(true)
@@ -80,14 +80,14 @@ model menu_X_category {
   category_id_category Int
   menu_id_menu         Int
   display_order        Int      @db.SmallInt
-  category             category @relation(fields: [category_id_category], references: [category_id])
-  menu                 menu     @relation(fields: [menu_id_menu], references: [menu_id])
+  category             category @relation(fields: [category_id_category], references: [category_id], onDelete: Cascade, map: "category_fk")
+  menu                 menu     @relation(fields: [menu_id_menu], references: [menu_id], onDelete: Cascade, map: "menu_fk")
 
-  @@id([category_id_category, menu_id_menu])
+  @@id([category_id_category, menu_id_menu], map: "menu_X_category_pk")
 }
 
 model modgroup {
-  mod_id             Int               @id @default(autoincrement())
+  mod_id             Int               @id(map: "modgroup_pk") @default(autoincrement())
   name               String
   required_selection Int               @db.SmallInt
   max_selection      Int               @db.SmallInt
@@ -101,20 +101,20 @@ model modgroup {
 }
 
 model modgroup_item {
-  modgroup_item_id   Int      @id @default(autoincrement())
+  modgroup_item_id   Int      @id(map: "modgroup_item_pk") @default(autoincrement())
   mod_id             Int
   item_id            Int
   item_is_standalone Boolean  @default(false)
   price              Decimal? @db.Money
   display_order      Int      @db.SmallInt
-  item               item     @relation(fields: [item_id, item_is_standalone], references: [item_id, is_standalone])
-  modgroup           modgroup @relation(fields: [mod_id], references: [mod_id])
+  item               item     @relation(fields: [item_id, item_is_standalone], references: [item_id, is_standalone], onDelete: NoAction, onUpdate: NoAction, map: "modgroup_item_item_id_standalone_fk")
+  modgroup           modgroup @relation(fields: [mod_id], references: [mod_id], onDelete: NoAction, onUpdate: NoAction, map: "modgroup_item_modgroup_fk")
 
-  @@unique([mod_id, item_id], name: "modgroup_item_uq_mod_id_item_id")
+  @@unique([mod_id, item_id], map: "modgroup_item_uq_mod_id_item_id")
 }
 
 model order {
-  oid                   Int          @id @default(autoincrement())
+  oid                   Int          @id(map: "order_pk") @default(autoincrement())
   email                 String       @db.Citext
   name                  String
   phone                 String?
@@ -134,16 +134,16 @@ model ordering_hours {
   open_time   DateTime    @db.Time(6)
   close_time  DateTime    @db.Time(6)
 
-  @@unique([day_of_week, open_time, close_time], name: "ordering_hours_entry_uq")
+  @@unique([day_of_week, open_time, close_time], map: "ordering_hours_entry_uq")
 }
 
 model store {
-  username      String @id
+  username      String @id(map: "username_pk")
   password_hash String @db.VarChar(60)
 }
 
 model stripe {
-  payment_intent String   @id
+  payment_intent String   @id(map: "stripe_pk")
   time_started   DateTime @default(now()) @db.Timestamptz(6)
 }
 
