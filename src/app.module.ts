@@ -22,6 +22,7 @@ import { CategoryXItemModule } from './category-x-item/category-x-item.module';
 import { StoreConfirmationModule } from './store-confirmation/store-confirmation.module';
 import { AuthModule } from './auth/auth.module';
 import { StripeModule } from './stripe/stripe.module';
+import { StoreModule } from './store/store.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { StripeModule } from './stripe/stripe.module';
     StripeModule,
     JsonBodyMiddleware,
     RawBodyMiddleware,
+    StoreModule,
   ],
   controllers: [AppController],
   providers: [AppService],
