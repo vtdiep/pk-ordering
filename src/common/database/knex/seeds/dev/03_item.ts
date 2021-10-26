@@ -105,12 +105,11 @@ export const FRIES_SIDES_ITEMS: Item[] = [
 ];
 
 /**
- * Seed for item and category_X_item tables
+ * Seed for item table
  */
 export async function seed(knex: Knex): Promise<void> {
   // Deletes ALL existing entries
   await knex.raw('TRUNCATE TABLE item RESTART IDENTITY CASCADE');
-  await knex.raw('TRUNCATE TABLE "category_X_item" RESTART IDENTITY CASCADE');
 
   // Inserts standalone items
   await knex('item').insert([
