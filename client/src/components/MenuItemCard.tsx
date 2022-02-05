@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const StyledMenuItemCard = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
 
   background-color: #ebeaea;
   align-self: center;
@@ -29,22 +29,34 @@ const MenuItemCardItemName = styled.h3`
 
 const MenuItemCardItemDescription = styled.p`
   grid-row-start: 2;
+  align-self: end;
 `;
-
+const MenuItemCardItemPrice = styled.p``;
 const MenuItemCardImage = styled.img`
-  grid-row: 1 / span 2;
+  grid-row: 1 / span 3;
   grid-column-start: 2;
   justify-self: center;
   align-self: center;
 `;
 
-export const MenuItemCard = () => {
+type MenuItemCardProps = {
+  name: string;
+  description: string;
+  imgURL: string;
+  price: string | number;
+};
+
+export const MenuItemCard = ({
+  name,
+  description,
+  imgURL,
+  price,
+}: MenuItemCardProps) => {
   return (
     <StyledMenuItemCard>
-      <MenuItemCardItemName>Item Name</MenuItemCardItemName>
-      <MenuItemCardItemDescription>
-        Item Description
-      </MenuItemCardItemDescription>
+      <MenuItemCardItemName>{name}</MenuItemCardItemName>
+      <MenuItemCardItemDescription>{description}</MenuItemCardItemDescription>
+      <MenuItemCardItemPrice>{price}</MenuItemCardItemPrice>
       <MenuItemCardImage src="http://placekitten.com/100/100" alt="" />
     </StyledMenuItemCard>
   );

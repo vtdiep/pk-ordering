@@ -1,6 +1,9 @@
+import { MutableRefObject, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MenuContainer } from './MenuContainer';
 import { Nav } from './Nav';
+import axios, { AxiosResponse } from 'axios';
+import { StoreData, StoreMenu } from '../types/StoreData';
 
 const StyledStore = styled.div`
   display: grid;
@@ -12,10 +15,57 @@ export interface StoreProps {
 }
 
 export const Store = () => {
+  const [storeData, setStoreData] = useState<StoreData | null>(null);
+  const [menus, setMenus] = useState<StoreMenu[] | null>(null);
+
+  const [menuRefs, setMenuRefs] = useState<React.MutableRefObject<null>[]>([]);
+  const [navItemRefs, setNavItemRefs] =
+    useState<React.MutableRefObject<Array<HTMLElement | null>>>();
+
+  const addMenuRef = (ref: MutableRefObject<null>) => {
+    setMenuRefs([...menuRefs, ref]);
+  };
+
+  const setMenuNavItem = useCallback(
+    (ref: React.MutableRefObject<Array<HTMLElement | null>>) => {
+      setNavItemRefs(ref);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    async function fetchData() {
+      let x: AxiosResponse<StoreData> = await axios.get(
+        'http://localhost:3000/store',
+      );
+      let returnedDataObject: StoreData = x.data;
+      setStoreData(returnedDataObject);
+      setMenus(returnedDataObject.data.menus);
+    }
+    fetchData();
+  }, []);
+
+  // not used
+  const [activeNavItem, setActiveNavItem] = useState<number>(-1);
+
+  function changeNavItem(navItemNumber: number) {
+    setActiveNavItem(navItemNumber);
+  }
+
   return (
     <StyledStore>
-      <Nav />
-      <MenuContainer />
+      <Nav
+        menus={menus}
+        setMenuNavItem={setMenuNavItem}
+        activeNavItem={activeNavItem}
+        changeActiveNavItem={changeNavItem}
+      />
+      <MenuContainer
+        storeData={storeData}
+        addMenuRef={addMenuRef}
+        changeActiveNavItem={changeNavItem}
+        navItemRefs={navItemRefs}
+      />
     </StyledStore>
   );
 };

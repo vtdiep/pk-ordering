@@ -1,8 +1,15 @@
+import React, { memo, MutableRefObject } from 'react';
 import styled from 'styled-components';
 import { MenuItemCard, StyledMenuItemCard } from './MenuItemCard';
+import { StoreItem, StoreMenu } from '../types/StoreData';
+import './Menu.css';
 
 const StyledMenu = styled.div`
   background-color: rosybrown;
+
+  > div > div {
+    margin-top: 10px;
+  }
 `;
 
 const MenuItemContainer = styled.div`
@@ -14,6 +21,10 @@ const MenuItemContainer = styled.div`
 
 const MenuItemContainerTitle = styled.h2`
   grid-column: 1 / span 2;
+  padding-top: auto;
+  padding-bottom: auto;
+  margin-top: 0;
+  margin-bottom: 0;
   @media (min-width: 320px) {
     grid-column: 1 / span 1;
   }
@@ -22,6 +33,9 @@ const MenuItemContainerTitle = styled.h2`
 const MenuItemCards = styled.div`
   display: grid;
   flex: 1;
+  > div {
+    height: 100%;
+  }
 
   @media (min-width: 320px) {
     grid-template-columns: 1fr;
@@ -49,21 +63,74 @@ const MenuItemCardsContainer = styled.div`
   }
 `;
 
-export const Menu = () => {
-  return (
-    <StyledMenu>
-      <MenuItemContainer>
-        <MenuItemContainerTitle>Menu Title</MenuItemContainerTitle>
+type MenuProps = {
+  menuInfo: StoreMenu;
+  itemsInfo: StoreItem[];
+};
+
+export const Menu = React.forwardRef<
+  Array<HTMLDivElement>,
+  React.PropsWithChildren<MenuProps>
+>((props, ref) => {
+  let categories = props.menuInfo.category.map((category, idx) => {
+    return (
+      <div
+        id={'cat-' + idx.toString()}
+        className="menu-category"
+        ref={(thisRef) => {
+          if (ref != null) {
+            // remove (instance: HTMLDivElement[] | null) => void) type from ref
+            let rref = ref as MutableRefObject<(HTMLDivElement | null)[]>;
+            if (rref.current != null) {
+              // link ref using category idx
+              rref.current[idx] = thisRef;
+            }
+          }
+          return null;
+        }}
+      >
+        <MenuItemContainerTitle>
+          {category.category_name}
+        </MenuItemContainerTitle>
+
         <MenuItemCardsContainer>
           <MenuItemCards>
-            <MenuItemCard />
-
-            <MenuItemCard />
-
-            <MenuItemCard />
+            {category.items.map((item) => {
+              return (
+                <MenuItemCard
+                  name={props.itemsInfo[item.item_id - 1].name}
+                  description={
+                    props.itemsInfo[item.item_id - 1].description ?? ''
+                  }
+                  imgURL={''}
+                  price={props.itemsInfo[item.item_id - 1].price ?? ''}
+                />
+              );
+            })}
           </MenuItemCards>
         </MenuItemCardsContainer>
-      </MenuItemContainer>
+      </div>
+    );
+  });
+
+  return (
+    <StyledMenu>
+      <div>{categories}</div>
     </StyledMenu>
   );
-};
+});
+
+function areEqual(prevProps: MenuProps, nextProps: MenuProps) {
+  /*
+  return true if passing nextProps to render would return
+  the same result as passing prevProps to render,
+  otherwise return false
+  */
+
+  if (prevProps.itemsInfo.length == nextProps.itemsInfo.length) {
+    return true;
+  }
+  return false;
+}
+
+export const MemoizedMenu = memo(Menu, areEqual);
