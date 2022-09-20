@@ -73,9 +73,10 @@ export const Menu = React.forwardRef<
   React.PropsWithChildren<MenuProps>
 >((props, ref) => {
   let categories = props.menuInfo.category.map((category, idx) => {
+    let categoryKey = `${category.category_id}-${category.category_name}`
     return (
       <div
-        id={'cat-' + idx.toString()}
+        id={`${categoryKey}`}
         className="menu-category"
         ref={(thisRef) => {
           if (ref != null) {

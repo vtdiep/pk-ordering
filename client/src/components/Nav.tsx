@@ -83,6 +83,7 @@ export const Nav = ({
   };
 
   let listItems = menus?.[0].category.map((category, idx) => {
+    let categoryKey = `${category.category_id}-${category.category_name}`
     return (
       <li
         className={activeNavItem == idx ? 'active-nav-item' : ''}
@@ -91,7 +92,7 @@ export const Nav = ({
       >
         <a
           className={`navItem-${idx}`}
-          href={'#cat-' + idx.toString()}
+          href={`#${categoryKey}`}
           ref={(r) => {
             navItemRef.current[idx] = r;
           }}
