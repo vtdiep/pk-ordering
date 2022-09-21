@@ -26,7 +26,7 @@ export const MenuContainer = ({
   storeData,
   addMenuRef,
   changeActiveNavItem,
-  navItemRefs,
+  navItemRefs, // references to items in the navbar
 }: MenuContainerProps) => {
   let scrollInProgress = false;
   let topSectionNumber = -1;
@@ -69,6 +69,11 @@ export const MenuContainer = ({
     }
   };
 
+  /**
+   * Toggles class:active-nav-item on/off depending on which section is in view at the top
+   * @param idx Index of the ref that triggered this function
+   * @returns 
+   */
   let wrappedCallbackFunction = (idx: number): IntersectionObserverCallback => {
     let fx: IntersectionObserverCallback = (entries) => {
       console.log(`interaction observer for category ${idx}`);
@@ -124,16 +129,26 @@ export const MenuContainer = ({
     // delay: 100,
   };
 
-  const menuContainerRefs = useRef<Array<HTMLDivElement>>([]);
+  /**
+   * A ref can be used with multiple current elements.
+   * We will pass this ref into Menu, where the ref will be linked to 
+   * categories in the Menu
+   */
+  const menuCategoryRefs = useRef<Array<HTMLDivElement>>([]);
   let observers: IntersectionObserver[] = [];
 
+  // slice instead of reset to empty array,
+  // because useEffect called after component rendered 
+  // (ie after the ref callbacks are called)
+  // if we reset refs to empty, we would lose the elements
   useEffect(() => {
-    menuContainerRefs.current = menuContainerRefs.current.slice(
+    menuCategoryRefs.current = menuCategoryRefs.current.slice(
       0,
       storeData?.data.menus[0].category.length,
     );
 
-    menuContainerRefs.current.map((category, idx) => {
+    // attach an IntersectionObserver to each ref
+    menuCategoryRefs.current.map((category, idx) => {
       var observer = new IntersectionObserver(
         wrappedCallbackFunction(idx),
         options,
@@ -153,7 +168,7 @@ export const MenuContainer = ({
   let menuItems = storeData?.data.menus.map((menuItem, idx) => {
     return (
       <MemoizedMenu
-        ref={menuContainerRefs}
+        ref={menuCategoryRefs}
         menuInfo={menuItem}
         itemsInfo={storeData?.data.items}
       ></MemoizedMenu>
@@ -164,7 +179,7 @@ export const MenuContainer = ({
     return storeData?.data.menus.map((menuItem, idx) => {
       return (
         <Menu
-          ref={menuContainerRefs}
+          ref={menuCategoryRefs}
           menuInfo={menuItem}
           itemsInfo={storeData?.data.items}
         ></Menu>
