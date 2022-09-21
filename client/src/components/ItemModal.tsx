@@ -13,15 +13,13 @@ const StyledDiv = styled.div`
   right: 0;
   bottom: 0;
   border: 0px;
-    /* top: 0; */
     background-color: rgba(91, 112, 131, 0.4);
-    /* position: absolute; */
 `
 
 export const ItemModal = (props:ItemModalProps) =>{
 
     useEffect( () => {
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflowY = 'hidden';
     }, [])
 
     let navigate = useNavigate()
