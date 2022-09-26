@@ -35,12 +35,12 @@ export const Store = () => {
 
   useEffect(() => {
     async function fetchData() {
-      let x: AxiosResponse<StoreData> = await axios.get(
+      let x: AxiosResponse<StoreData, any> | null = await axios.get(
         'http://localhost:3000/store',
       );
-      let returnedDataObject: StoreData = x.data;
+      let returnedDataObject: StoreData | null = x?.data ?? null;
       setStoreData(returnedDataObject);
-      setMenus(returnedDataObject.data.menus);
+      setMenus(returnedDataObject?.data.menus ?? null);
     }
     fetchData();
   }, []);
@@ -60,12 +60,17 @@ export const Store = () => {
         activeNavItem={activeNavItem}
         changeActiveNavItem={changeNavItem}
       />
-      <MenuContainer
-        storeData={storeData}
-        addMenuRef={addMenuRef}
-        changeActiveNavItem={changeNavItem}
-        navItemRefs={navItemRefs}
-      />
+
+      {menus ? (
+        <MenuContainer
+          storeData={storeData}
+          addMenuRef={addMenuRef}
+          changeActiveNavItem={changeNavItem}
+          navItemRefs={navItemRefs}
+        />
+      ) : (
+        <div>Coming soon!</div>
+      )}
     </StyledStore>
   );
 };
