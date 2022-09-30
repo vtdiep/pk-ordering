@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ItemModalProps } from '../types/ItemModelProps';
 import { useEffect } from 'react';
+import { ItemModalCard } from './ItemModalCard';
 
 const StyledDiv = styled.div`
   position: fixed;
@@ -36,6 +37,7 @@ export const ItemModal = (props: ItemModalProps) => {
       >
         Close
       </span>
+      <ItemModalCard></ItemModalCard>
     </StyledDiv>
   );
 };
