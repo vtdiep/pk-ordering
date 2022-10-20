@@ -31,14 +31,28 @@
       "label": "Backend Term",
       // The task will launch a shell
       "type": "shell",
-      "options": {
-        "shell": {
-          "executable": "C:\\Program Files\\Git\\bin\\bash.exe",
-          "args": ["-c"]
-          // -c needed to specify command mode ie we will run commands
-        }
+      "windows": {
+        "options": {
+          "shell": {
+            "executable": "C:\\Program Files\\Git\\bin\\bash.exe",
+            "args": ["-c"]
+            // -c needed to specify command mode ie we will run commands
+          }
+        },
+        "command":["cd src && exec bash"],
       },
-      "command":["cd src && exec bash"],
+      "osx": {
+        "options": {
+          "shell": {
+            "executable": "/bin/zsh",
+            "args": ["-c"]
+            // -c needed to specify command mode ie we will run commands
+          }
+        },
+        "command":["cd src && exec zsh"],
+      },
+
+
       // Mark as a background task to avoid the spinner animation on the terminal tab
       "isBackground": true,
       // Create the tasks in a terminal group
@@ -67,14 +81,26 @@
     {
       "label": "Frontend Term",
       "type": "shell",
-      "options": {
-        "shell": {
-          "executable": "C:\\Program Files\\Git\\bin\\bash.exe",
-          "args": ["-c"]
-          // -c needed to specify command mode ie we will run commands
-        }
+      "windows": {
+        "options": {
+          "shell": {
+            "executable": "C:\\Program Files\\Git\\bin\\bash.exe",
+            "args": ["-c"]
+            // -c needed to specify command mode ie we will run commands
+          }
+        },
+        "command":["cd client && exec bash"],
       },
-      "command":["cd client && exec bash"],
+      "osx": {
+        "options": {
+          "shell": {
+            "executable": "/bin/zsh",
+            "args": ["-c"]
+            // -c needed to specify command mode ie we will run commands
+          }
+        },
+        "command":["cd client && exec zsh"],
+      },
       "isBackground": true,
       "presentation": {
         "group": "front",
