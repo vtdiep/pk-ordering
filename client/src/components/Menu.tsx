@@ -73,7 +73,7 @@ export const Menu = React.forwardRef<
   React.PropsWithChildren<MenuProps>
 >((props, ref) => {
   let categories = props.menuInfo.category.map((category, idx) => {
-    let categoryKey = `${category.category_id}-${category.category_name}`
+    let categoryKey = `${category.category_id}-${category.category_name}`;
     return (
       <div
         id={`${categoryKey}`}
@@ -99,6 +99,7 @@ export const Menu = React.forwardRef<
             {category.items.map((item) => {
               return (
                 <MenuItemCard
+                  id={item.item_id}
                   name={props.itemsInfo[item.item_id - 1].name}
                   description={
                     props.itemsInfo[item.item_id - 1].description ?? ''

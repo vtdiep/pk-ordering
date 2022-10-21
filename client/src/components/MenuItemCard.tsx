@@ -61,35 +61,38 @@ const StyledLink = styled(Link)`
 `;
 
 type MenuItemCardProps = {
+  id: number;
   name: string;
   description: string;
   imgURL: string;
   price: string | number;
 };
 
-const handleClick = (e:any) =>{
+const handleClick = (e: any) => {
   document.body.style.overflow = 'hidden';
-}
+};
 
 export const MenuItemCard = ({
+  id,
   name,
   description,
   imgURL,
   price,
 }: MenuItemCardProps) => {
-  let location = useLocation()
+  let location = useLocation();
 
   return (
-    
-      <StyledMenuItemCard>
-        <StyledLink to={`/item/${name}`} state={{background: location}} onClick={handleClick} >
+    <StyledMenuItemCard>
+      <StyledLink
+        to={`/item/${name}`}
+        state={{ background: location, id }}
+        onClick={handleClick}
+      >
         <MenuItemCardItemName>{name}</MenuItemCardItemName>
         <MenuItemCardItemDescription>{description}</MenuItemCardItemDescription>
         <MenuItemCardItemPrice>{price}</MenuItemCardItemPrice>
         <MenuItemCardImage src="http://placekitten.com/100/100" alt="" />
-        </StyledLink>
-      </StyledMenuItemCard>
-    
-
+      </StyledLink>
+    </StyledMenuItemCard>
   );
 };

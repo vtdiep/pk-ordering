@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ItemModalProps } from '../types/ItemModelProps';
 import { useEffect } from 'react';
 import { ItemModalCard } from './ItemModalCard';
@@ -15,6 +15,9 @@ const StyledDiv = styled.div`
   bottom: 0;
   border: 0px;
   background-color: rgba(91, 112, 131, 0.4);
+  display: flex;
+  justify-content: center;
+  padding: ;
 `;
 
 export const ItemModal = (props: ItemModalProps) => {
@@ -24,11 +27,13 @@ export const ItemModal = (props: ItemModalProps) => {
 
   let navigate = useNavigate();
   let { name } = useParams();
-  // let name = props.name
+  const location = useLocation();
+  const { id } = location.state;
 
   return (
     <StyledDiv>
       {name}
+      {id}
       <span
         onClick={(e: any) => {
           document.body.style.overflow = 'unset';
