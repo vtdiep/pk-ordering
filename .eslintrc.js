@@ -20,7 +20,7 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
-    'linebreak-style': ['error', 'windows'],
+    'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'],
     "import/prefer-default-export": 'off',
     'class-methods-use-this': 'off',
     'prefer-const': 'off',
