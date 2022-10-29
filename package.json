@@ -105,7 +105,13 @@
     "roots": [
       "<rootDir>/src",
       "<rootDir>/test"
-    ]
+    ],
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "moduleNameMapper": {
+      "^src/(.*)$": "<rootDir>/src/$1"
+    }
   },
   "prisma": {
     "schema": "./src/common/database/prisma/schema.prisma"
