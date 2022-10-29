@@ -17,7 +17,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:db": "jest --config ./test/database/jest-db.config.json",
+    "test:db": "jest --projects test/database/jest-db.config.json",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install"
@@ -104,6 +104,14 @@
       "ts"
     ],
     "rootDir": "src",
+    "projects": [
+      "<rootDir>/src",
+      "<rootDir>/test/"
+    ],
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/test"
+    ],
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/$1"
     },
