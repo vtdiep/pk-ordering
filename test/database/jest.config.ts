@@ -1,17 +1,15 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-  moduleFileExtensions: ['js', 'json', 'ts'],
-  rootDir: '.',
-  moduleDirectories: ['node_modules'],
-  moduleNameMapper: {
-    '^src/(.*)$': '<rootDir>/../../src/$1',
-  },
-  testEnvironment: 'node',
+  // use jest-preset inside of root dir
+  preset: '<rootDir>',
+  displayName: 'Database Tests',
+
+  // We need to respecify rootDir, b/c default rootDir is '.'
+  // If you also have specified rootDir, the resolution of this file will be relative to that root directory.
+  // https://jestjs.io/docs/configuration/#preset-string
+  rootDir: '../../',
   testRegex: '.db.spec.ts$',
-  transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
-  },
 };
 
 export default config;
