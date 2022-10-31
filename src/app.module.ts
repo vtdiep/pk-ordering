@@ -37,12 +37,10 @@ import { StoreModule } from './store/store.module';
     StoreConfirmationModule,
     AuthModule,
     StripeModule,
-    JsonBodyMiddleware,
-    RawBodyMiddleware,
     StoreModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, RawBodyMiddleware, JsonBodyMiddleware],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
