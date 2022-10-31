@@ -23,7 +23,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@golevelup/nestjs-webhooks": "^0.2.12",
+    "@golevelup/nestjs-webhooks": "^0.2.14",
     "@nestjs/common": "^9.1.6",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.1.6",
