@@ -33,7 +33,7 @@ export function ToBooleanFromString() {
     }: { value: any; key: string; obj: any; type: TransformationType } = params;
     console.log(value);
     console.log(obj);
-    console.log(this);
+    // console.log(this);
 
     if (typeof value === 'string' && ['true', 'false'].includes(value)) {
       console.log('y');

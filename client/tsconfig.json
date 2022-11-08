@@ -18,9 +18,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "src/*":[".","../src/*"]
+    },
+    "strictPropertyInitialization": false,
+    "experimentalDecorators": true
   },
   "include": [
-    "src"
+    "src",
+    "../src/**/*.entity.ts",
+    "../src/**/*.dto.ts"
   ]
 }
