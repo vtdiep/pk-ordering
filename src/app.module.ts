@@ -23,6 +23,7 @@ import { StoreConfirmationModule } from './store-confirmation/store-confirmation
 import { AuthModule } from './auth/auth.module';
 import { StripeModule } from './stripe/stripe.module';
 import { StoreModule } from './store/store.module';
+import { ModchoiceModule } from './modchoice/modchoice.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { StoreModule } from './store/store.module';
     AuthModule,
     StripeModule,
     StoreModule,
+    ModchoiceModule,
   ],
   controllers: [AppController],
   providers: [AppService, RawBodyMiddleware, JsonBodyMiddleware],
