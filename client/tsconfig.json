@@ -20,8 +20,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "src/*":["."],
-      "@server/*":["../src/*"]
+      "@server/*":["../src/*"],
+      "src/*":[".", "../src/*"],
     },
     "strictPropertyInitialization": false,
     "experimentalDecorators": true
