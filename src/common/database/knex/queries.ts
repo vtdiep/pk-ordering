@@ -22,7 +22,10 @@ export const getChoicesForItem = (knex: Knex, item_id: number) =>
     knex.select('mod_id').from('mods').where('item_id', item_id),
   );
 
-export const jsonChoices = (knex: Knex, item_id?: number) =>
+export const jsonChoices = (
+  knex: Knex,
+  item_id?: number,
+): Knex.QueryBuilder<any, [ChoicesJSON]> =>
   knex
     .select<any, ChoicesJSON>([
       'sc.mod_id',

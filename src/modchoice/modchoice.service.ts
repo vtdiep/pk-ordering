@@ -1,12 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { Knex } from 'knex';
+import { KNEX_CONNECTION } from 'src/common/constants';
+import { jsonChoices } from 'src/common/database/knex/queries';
 
 @Injectable()
 export class ModchoiceService {
-  findAll() {
-    return `This action returns all modchoice`;
+  constructor(@Inject(KNEX_CONNECTION) private knex: Knex) {}
+
+  async findAll() {
+    let res = await jsonChoices(this.knex);
+    return res;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} modchoice`;
+  async findOne(id: number) {
+    let res = await jsonChoices(this.knex, id);
+    return res;
   }
 }

@@ -10,8 +10,8 @@ export class ModchoiceController {
     return this.modchoiceService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.modchoiceService.findOne(+id);
+  @Get(':item_id')
+  findOne(@Param('item_id') item_id: number) {
+    return this.modchoiceService.findOne(+item_id);
   }
 }
