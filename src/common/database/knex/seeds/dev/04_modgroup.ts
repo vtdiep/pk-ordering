@@ -129,7 +129,10 @@ export async function seed(knex: Knex): Promise<void> {
   //    [[mod_id2, oid3], [mod_id2, oid4]]
   // ]
   let idPairs = pairs.map((pair, i) => {
-    let idPair = pair.options.map(() => [mids[i], oids.shift()]);
+    let idPair = pair.options.map(() => [
+      mids[i].mod_id,
+      oids.shift()?.item_id,
+    ]);
     return idPair;
   });
 
