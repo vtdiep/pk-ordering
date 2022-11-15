@@ -4,7 +4,7 @@ import { ChoicesJSON } from '../entities/ChoicesJSON.entity';
 
 export const getChoices = (knex: Knex) =>
   knex
-    .select<any, Choices>([
+    .select<any, Array<Choices>>([
       'mi.mod_id',
       'mi.price as mi_price',
       'mi.display_order',
@@ -14,6 +14,7 @@ export const getChoices = (knex: Knex) =>
     .join('item as i', function on() {
       this.on('mi.item_id', '=', 'i.item_id');
     })
+    .orderBy('mod_id', 'asc')
     .orderBy('display_order', 'asc')
     .orderBy('item_id', 'asc');
 
@@ -43,4 +44,4 @@ export const jsonChoices = (
       }
     })
     .groupBy('mod_id')
-    .orderBy('mod_id', 'asc')
+    .orderBy('mod_id', 'asc');

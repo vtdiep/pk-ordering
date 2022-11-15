@@ -9,6 +9,7 @@ import {
   jsonChoices,
 } from 'src/common/database/knex/queries';
 
+// todo: make tests less brittle/ less heavy
 describe('queries', () => {
   let db: Knex;
   let module: TestingModule;
@@ -20,10 +21,14 @@ describe('queries', () => {
     }).compile();
 
     db = module.get(KNEX_CONNECTION);
+    await db.seed.run({
+      directory: './src/common/database/knex/seeds/dev', // relative to knexfile location
+    });
   });
 
   afterAll(async () => {
-    module.close();
+    await db.destroy();
+    await module.close();
   });
 
   beforeEach(async () => {});
@@ -36,15 +41,15 @@ describe('queries', () => {
     let result = await getChoices(db);
     let expected = [
       {
-        mod_id: 3,
+        mod_id: 1,
         mi_price: null,
         display_order: 0,
-        item_id: 21,
-        name: 'Strawberries',
-        description: 'Red',
+        item_id: 18,
+        name: 'No Salt',
+        description: '',
         active: true,
         is_standalone: false,
-        price: '$2.50',
+        price: '$0.00',
         private_note: '',
       },
       {
@@ -59,16 +64,30 @@ describe('queries', () => {
         price: '$2.50',
         private_note: '',
       },
+
       {
-        mod_id: 1,
+        mod_id: 2,
         mi_price: null,
-        display_order: 0,
-        item_id: 18,
-        name: 'No Salt',
-        description: '',
+        display_order: 1,
+        item_id: 20,
+        name: 'Margarine',
+        description: 'Slightly sweet',
         active: true,
         is_standalone: false,
-        price: '$0.00',
+        price: '$2.50',
+        private_note: null,
+      },
+
+      {
+        mod_id: 3,
+        mi_price: null,
+        display_order: 0,
+        item_id: 21,
+        name: 'Strawberries',
+        description: 'Red',
+        active: true,
+        is_standalone: false,
+        price: '$2.50',
         private_note: '',
       },
       {
@@ -78,18 +97,6 @@ describe('queries', () => {
         item_id: 22,
         name: 'Blueberries',
         description: 'Blue',
-        active: true,
-        is_standalone: false,
-        price: '$2.50',
-        private_note: null,
-      },
-      {
-        mod_id: 2,
-        mi_price: null,
-        display_order: 1,
-        item_id: 20,
-        name: 'Margarine',
-        description: 'Slightly sweet',
         active: true,
         is_standalone: false,
         price: '$2.50',
@@ -120,7 +127,8 @@ describe('queries', () => {
         private_note: null,
       },
     ];
-    expect(result).toEqual(expected);
+    expect(result.length).toEqual(7);
+    expect(result[2]).toEqual(expected[2]);
   });
 
   it('getChoicesForItem', async () => {
@@ -139,18 +147,6 @@ describe('queries', () => {
         private_note: '',
       },
       {
-        mod_id: 3,
-        mi_price: null,
-        display_order: 0,
-        item_id: 21,
-        name: 'Strawberries',
-        description: 'Red',
-        active: true,
-        is_standalone: false,
-        price: '$2.50',
-        private_note: '',
-      },
-      {
         mod_id: 2,
         mi_price: null,
         display_order: 1,
@@ -162,6 +158,19 @@ describe('queries', () => {
         price: '$2.50',
         private_note: null,
       },
+      {
+        mod_id: 3,
+        mi_price: null,
+        display_order: 0,
+        item_id: 21,
+        name: 'Strawberries',
+        description: 'Red',
+        active: true,
+        is_standalone: false,
+        price: '$2.50',
+        private_note: '',
+      },
+
       {
         mod_id: 3,
         mi_price: null,
