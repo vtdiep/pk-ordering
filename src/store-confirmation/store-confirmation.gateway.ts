@@ -21,7 +21,7 @@ export class StoreConfirmationGateway
   private logger: Logger = new Logger('WebsocketGateway');
 
   afterInit(server: Server) {
-    this.logger.log('Init');
+    this.logger.log(`Init @ ${JSON.stringify(server.address())}`);
 
     this.server.on('connection', (ws, req) => {
       let id = req.headers['sec-websocket-key'];
