@@ -9,7 +9,7 @@ const config: Config = {
   // If you also have specified rootDir, the resolution of this file will be relative to that root directory.
   // https://jestjs.io/docs/configuration/#preset-string
   rootDir: '../../',
-  testRegex: '.db.spec.ts$',
+  testRegex: ['.db.spec.ts$', '.controller.spec.ts$'],
 };
 
 export default config;
