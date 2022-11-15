@@ -14,7 +14,8 @@ export const getChoices = (knex: Knex) =>
     .join('item as i', function on() {
       this.on('mi.item_id', '=', 'i.item_id');
     })
-    .orderBy('display_order');
+    .orderBy('display_order', 'asc')
+    .orderBy('item_id', 'asc');
 
 export const getChoicesForItem = (knex: Knex, item_id: number) =>
   getChoices(knex).whereIn(
@@ -42,4 +43,4 @@ export const jsonChoices = (
       }
     })
     .groupBy('mod_id')
-    .orderBy('mod_id');
+    .orderBy('mod_id', 'asc')
