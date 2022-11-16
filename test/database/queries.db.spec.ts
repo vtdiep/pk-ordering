@@ -10,16 +10,19 @@ import {
 } from 'src/common/database/knex/queries';
 
 // todo: make tests less brittle/ less heavy
+
+// this test is an example of using transactions to reset db state
 describe('queries', () => {
   let db: Knex;
   let module: TestingModule;
+  let trxProvider: Knex.TransactionProvider;
+  let tr: Knex.Transaction;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
       imports: [KnexModule],
       providers: [],
     }).compile();
-
     db = module.get(KNEX_CONNECTION);
     await db.seed.run({
       directory: './src/common/database/knex/seeds/dev', // relative to knexfile location
@@ -31,14 +34,21 @@ describe('queries', () => {
     await module.close();
   });
 
-  beforeEach(async () => {});
+  beforeEach(async () => {
+    trxProvider = db.transactionProvider();
+    tr = await trxProvider();
+  });
+
+  afterEach(async () => {
+    await tr.rollback();
+  });
 
   it('should be defined', () => {
     expect(db).toBeDefined();
   });
 
   it('getChoices', async () => {
-    let result = await getChoices(db);
+    let result = await getChoices(tr);
     let expected = [
       {
         mod_id: 1,
@@ -132,7 +142,7 @@ describe('queries', () => {
   });
 
   it('getChoicesForItem', async () => {
-    let result = await getChoicesForItem(db, 4);
+    let result = await getChoicesForItem(tr, 4);
     let expected = [
       {
         mod_id: 2,
@@ -399,5 +409,15 @@ describe('queries', () => {
     ];
 
     expect(result).toEqual(expected);
+  });
+
+  // example of transaction rollback code
+  it.skip('should rollback', async () => {
+    let query = tr.raw(`insert into category (description)
+    VALUES ('a') returning category_id`);
+    let result = await query;
+    // console.log(result)
+    expect(result.rowCount).toEqual(1);
+    expect(result.rows[0].category_id).toEqual(6);
   });
 });
