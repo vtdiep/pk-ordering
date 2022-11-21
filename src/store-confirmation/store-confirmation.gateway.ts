@@ -25,7 +25,7 @@ export class StoreConfirmationGateway
 
     this.server.on('connection', (ws, req) => {
       let id = req.headers['sec-websocket-key'];
-      console.log(`id is ${id}`);
+      console.log(`new client connected: ${id}`);
       // eslint-disable-next-line no-param-reassign, @typescript-eslint/dot-notation
       ws['id'] = id;
     });
@@ -34,6 +34,7 @@ export class StoreConfirmationGateway
   handleDisconnect(client: WebSocket) {
     // eslint-disable-next-line @typescript-eslint/dot-notation
     this.logger.log(`Client disconnected: ${client['id']}`);
+    this.logger.log(`Number of clients remaining:${this.server.clients.size}`);
   }
 
   handleConnection(client: WebSocket, ...args: any[]) {
@@ -45,7 +46,7 @@ export class StoreConfirmationGateway
   handleMessage(client: any, payload: any): string {
     // todo: update database to stop accepting orders
     // eslint-disable-next-line @typescript-eslint/dot-notation
-    console.log(`received from client:${client['id']} ${payload}`);
+    console.log(`received from client:${client.id} ${JSON.stringify(payload)}`);
     return 'Hello world!';
   }
 
@@ -53,7 +54,7 @@ export class StoreConfirmationGateway
   handleConfirmation(client: any, payload: any): WsResponse<unknown> {
     // todo: mark the store-confirmed order as confirmed in db
     // eslint-disable-next-line @typescript-eslint/dot-notation
-    console.log(`received from client:${client['id']} ${payload}`);
+    console.log(`received from client:${client.id} ${JSON.stringify(payload)}`);
     return { event: 'confirmed', data: 'Hello world!' };
   }
 
