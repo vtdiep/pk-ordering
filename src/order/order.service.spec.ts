@@ -221,9 +221,13 @@ describe('OrderService', () => {
     } as Partial<order> as order);
     await expect(service.create(orderDTO)).rejects.toThrowError();
   });
-  it('should throw when pickup_time is too far in the future', async () => {
-    throw new Error('tbd');
-  });
+
+  it.todo(
+    'should throw when pickup_time is too far in the future',
+    // async () => {
+    //   throw new Error('tbd');
+    // }
+  );
 
   it('should throw when amount_paid incorrect', async () => {
     expect.assertions(1);
@@ -240,9 +244,12 @@ describe('OrderService', () => {
     } as Partial<order> as order);
     await expect(service.create(orderDTO)).rejects.toThrowError();
   });
-  it('should throw when tax incorrect', async () => {
-    throw new Error('tbd');
-  });
+  it.todo(
+    'should throw when tax incorrect',
+    // async () => {
+    //   throw new Error('tbd');
+    // }
+  );
   it('should throw when requested item doesnt exist', async () => {
     expect.assertions(1);
     const orderDTO: CreateOrderDto = makeMockOrder((draft) => {
