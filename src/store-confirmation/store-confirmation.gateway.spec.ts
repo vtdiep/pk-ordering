@@ -15,4 +15,19 @@ describe('StoreConfirmationGateway', () => {
   it('should be defined', () => {
     expect(gateway).toBeDefined();
   });
+
+  it(`should be able to run gateway.'stop order'`, () => {
+    expect(gateway.handleMessage({}, {})).toEqual('Hello world!');
+  });
+
+  it(`should be able to run gateway.'confirmation'`, () => {
+    expect(gateway.handleConfirmation({}, {})).toStrictEqual({
+      event: 'confirmed',
+      data: 'Hello world!',
+    });
+  });
+
+  it(`should be able to notify of new order'`, () => {
+    expect(gateway.handleMessage({}, {})).toEqual('Hello world!');
+  });
 });
