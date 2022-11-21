@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
+import { WsAdapter } from '@nestjs/platform-ws';
 import { AppModule } from '../src/app.module';
 
 describe('AppController (e2e)', () => {
@@ -10,8 +11,10 @@ describe('AppController (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
+    const wsAdapter = new WsAdapter(app);
 
     app = moduleFixture.createNestApplication();
+    app.useWebSocketAdapter(wsAdapter);
     await app.init();
   });
 
