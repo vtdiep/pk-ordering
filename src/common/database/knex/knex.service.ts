@@ -14,22 +14,26 @@ const config: Knex.Config = knexfile.development;
 export class KnexService implements OnModuleInit, OnModuleDestroy {
   private knex: Knex;
 
+  private logger: Logger = new Logger('KnexService');
+
   async onModuleInit() {
     this.knex = knex(config);
     try {
       await this.knex.raw('select 1');
     } catch (error) {
-      Logger.error(`Knex: Failed to connect to database; closing program...`);
-      Logger.error(error);
-      Logger.error(`Knex: Config was ${JSON.stringify(config)}`);
+      this.logger.error(
+        `Knex: Failed to connect to database; closing program...`,
+      );
+      this.logger.error(error);
+      this.logger.error(`Knex: Config was ${JSON.stringify(config)}`);
       process.exit(1);
     }
-    Logger.log(`Knex: Connected to database - OK`);
+    this.logger.log(`Knex: Connected to database - OK`);
   }
 
   async onModuleDestroy() {
     await this.knex.destroy();
-    Logger.log('Knex: Disconnected from database');
+    this.logger.log('Knex: Disconnected from database');
     // throw new Error('Method not implemented.');
   }
 
