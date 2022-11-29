@@ -1,25 +1,30 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { chain } from 'lodash';
+import { STRIPE_CLIENT } from 'src/common/constants';
 import { CreateOrderDto } from 'src/order/dto/create-order.dto';
 import { OrderModoptDataDictByItemId } from 'src/order/order-modopt-data-dict.interface';
 import Stripe from 'stripe';
 
 @Injectable()
 export class StripeService {
-  constructor(private configService: ConfigService) {}
+  constructor(@Inject(STRIPE_CLIENT) private client: Stripe) {
+    this.stripe = this.client
+  }
+  // constructor(private configService: ConfigService) {}
 
   private stripe: Stripe;
 
   async onModuleInit() {
-    this.stripe = new Stripe(
-      this.configService.get<string>('STRIPE_PRIVATE_KEY', ''),
-      {
-        apiVersion: '2020-08-27',
-      },
-    );
-    Logger.log(`Stripe key loaded`, 'Stripe');
+    // this.stripe = new Stripe(
+    //   this.configService.get<string>('STRIPE_PRIVATE_KEY', ''),
+    //   {
+    //     apiVersion: '2020-08-27',
+    //   },
+    // );
+    // Logger.log(`Stripe key loaded`, 'Stripe');
+    // this.stripe = this.client
   }
 
   // metadata: You can specify up to 50 keys, with key names up to 40 characters long and values up to 500 characters long.

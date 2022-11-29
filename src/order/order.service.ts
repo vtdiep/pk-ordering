@@ -37,6 +37,14 @@ export class OrderService {
     private stripeService: StripeService,
   ) {}
 
+  static convertToDataDictByItemId( modOptData: OrderModOptDataEntity[]):OrderModoptDataDictByItemId   { return modOptData.reduce(
+      (acc, val) => ({
+        ...acc,
+        [val.item_id]: val,
+      }),
+      {},
+    )}
+
   async create(createOrderDto: CreateOrderDto) {
     let {
       orderErr,
