@@ -97,14 +97,17 @@ export const Menu = React.forwardRef<
         <MenuItemCardsContainer>
           <MenuItemCards>
             {category.items.map((item) => {
+              let itemInfo = props.itemsInfo.find( ele => ele.item_id === item.item_id)
+              if(!itemInfo) return null
               return (
                 <MenuItemCard
-                  name={props.itemsInfo[item.item_id - 1].name}
+                  itemID={item.item_id}
+                  name={itemInfo.name ?? "err"}
                   description={
-                    props.itemsInfo[item.item_id - 1].description ?? ''
+                    itemInfo.description ?? ''
                   }
                   imgURL={''}
-                  price={props.itemsInfo[item.item_id - 1].price ?? ''}
+                  price={itemInfo.price ?? ''}
                 />
               );
             })}

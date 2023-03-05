@@ -61,6 +61,7 @@ const StyledLink = styled(Link)`
 `;
 
 type MenuItemCardProps = {
+  itemID: number
   name: string;
   description: string;
   imgURL: string;
@@ -72,6 +73,7 @@ const handleClick = (e:any) =>{
 }
 
 export const MenuItemCard = ({
+  itemID,
   name,
   description,
   imgURL,
