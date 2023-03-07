@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const StyledMenuItemCard = styled.div`
@@ -68,7 +68,7 @@ type MenuItemCardProps = {
   price: string | number;
 };
 
-const handleClick = (e:any) =>{
+const handleClick = () =>{
   document.body.style.overflow = 'hidden';
 }
 
@@ -79,12 +79,11 @@ export const MenuItemCard = ({
   imgURL,
   price,
 }: MenuItemCardProps) => {
-  let location = useLocation()
 
   return (
     
       <StyledMenuItemCard>
-        <StyledLink to={`/item/${name}`} state={{background: location}} onClick={handleClick} >
+        <StyledLink to={`/item/${name}-${itemID}`} onClick={handleClick} >
         <MenuItemCardItemName>{name}</MenuItemCardItemName>
         <MenuItemCardItemDescription>{description}</MenuItemCardItemDescription>
         <MenuItemCardItemPrice>{price}</MenuItemCardItemPrice>

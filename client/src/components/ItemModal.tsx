@@ -23,12 +23,20 @@ export const ItemModal = (props: ItemModalProps) => {
   }, []);
 
   let navigate = useNavigate();
-  let { name } = useParams();
-  // let name = props.name
+  let { itemURLIdentifier } = useParams() ?? "";
+
+  let splitIndex:number = itemURLIdentifier?.lastIndexOf("-") ?? -1
+  if(splitIndex === -1) {
+    //todo: error msg
+    return null
+  }
+  let itemName = itemURLIdentifier?.substring(0,splitIndex)
+  let itemID = itemURLIdentifier?. substring(splitIndex+1)
 
   return (
     <StyledDiv>
-      {name}
+      {itemName}
+      {itemID}
       <span
         onClick={(e: any) => {
           document.body.style.overflow = 'unset';
