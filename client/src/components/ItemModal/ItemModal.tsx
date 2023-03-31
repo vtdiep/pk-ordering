@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ItemModalProps } from '../types/ItemModelProps';
+import { ItemModalProps } from '../../types/ItemModalCardProps';
 import { useEffect } from 'react';
 import { ItemModalCard } from './ItemModalCard';
 
