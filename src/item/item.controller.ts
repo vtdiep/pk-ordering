@@ -7,11 +7,15 @@ import {
   Param,
   Delete,
   ParseBoolPipe,
+  Query,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import { item } from '@prisma/client';
 import { ItemService } from './item.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { ItemEntity } from './entities/item.entity';
 
 @Controller('item')
 export class ItemController {
@@ -32,11 +36,14 @@ export class ItemController {
     return result;
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    let result: item | null;
-    result = await this.itemService.findOne(+id);
-    return result;
+  async findOne(@Param('id') id: string, @Query('include') include?: string) {
+    let result = await this.itemService.findOne(+id, Boolean(include));
+
+    if (!result) return null;
+
+    return new ItemEntity(result);
   }
 
   @Put(':id')

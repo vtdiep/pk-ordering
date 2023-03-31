@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
-import { Prisma } from '@prisma/client';
-import { Transform, Type } from 'class-transformer';
+import { item_X_modgroup, Prisma } from '@prisma/client';
+import { Exclude, Expose, Transform, Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
@@ -23,7 +23,7 @@ export abstract class ItemBaseEntity
   abstract name: string;
 
   @IsString()
-  abstract description?: string;
+  abstract description?: string | null;
 
   @IsBoolean()
   @Transform(ToBooleanFromString())
@@ -36,10 +36,10 @@ export abstract class ItemBaseEntity
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
-  abstract price?: number | Prisma.Decimal;
+  abstract price?: number | Prisma.Decimal | null;
 
   @IsString()
-  abstract private_note?: string;
+  abstract private_note?: string | null;
 }
 
 export class Item extends ItemBaseEntity {
@@ -56,4 +56,29 @@ export class Item extends ItemBaseEntity {
   price?: number | Prisma.Decimal;
 
   private_note?: string;
+}
+
+export class ItemEntity extends ItemBaseEntity {
+  item_id?: number;
+
+  name: string;
+
+  description?: string | null;
+
+  active?: boolean;
+
+  is_standalone?: boolean;
+
+  price?: number | Prisma.Decimal | null;
+
+  @Expose({ name: 'mods' })
+  item_X_modgroup: item_X_modgroup[];
+
+  @Exclude()
+  private_note?: string | null;
+
+  constructor(partial: Partial<ItemEntity>) {
+    super();
+    Object.assign(this, partial);
+  }
 }
