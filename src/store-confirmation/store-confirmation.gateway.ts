@@ -11,7 +11,8 @@ import {
 import { Server } from 'ws';
 import { StoreOrderEntity } from './dto/store-order.entity';
 
-@WebSocketGateway(3001)
+// todo: configure client to use non-default port, if possible
+@WebSocketGateway(Number(process.env.WEBSOCKET_SERVER) || 3001)
 export class StoreConfirmationGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
