@@ -31,7 +31,7 @@ export class ItemService {
               },
             },
           }
-        : {},
+        : null,
     };
     let query = this.prismaCtx.prisma.item.findUnique(conditions);
 
