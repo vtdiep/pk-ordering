@@ -31,6 +31,18 @@ describe('ItemController (e2e)', () => {
       directory: './src/common/database/knex/seeds/dev', // relative to knexfile location
       specific: '03_item.ts',
     });
+
+    // item table seedfile truncates, removing linked entries in join tables
+    // need to seed item joined tables
+    await knex.seed.run({
+      directory: './src/common/database/knex/seeds/dev', // relative to knexfile location
+      specific: '03a_category_X_item.ts',
+    });
+
+    await knex.seed.run({
+      directory: './src/common/database/knex/seeds/dev', // relative to knexfile location
+      specific: '05_item_X_modgroup.ts',
+    });
   });
 
   afterAll(async () => {
@@ -47,7 +59,18 @@ describe('ItemController (e2e)', () => {
 
     is_standalone: expect.any(Boolean),
 
-    price: expect.any(String),
+    price: expect.any(Number),
+  });
+
+  describe('private_note property should be excluded', () => {
+    it('should exclude private_note when GET /item/:id', async () => {
+      const { status, body } = await request(app.getHttpServer()).get(
+        `/item/${1}`,
+      );
+      expect.assertions(2);
+      expect(status).toBe(200);
+      expect(body).not.toHaveProperty('private_note');
+    });
   });
 
   describe('GET /item/:id', () => {
@@ -55,19 +78,48 @@ describe('ItemController (e2e)', () => {
       const { status, body } = await request(app.getHttpServer()).get(
         `/item/${1}`,
       );
-      expect.assertions(2);
+      expect.assertions(3);
       expect(status).toBe(200);
       expect(body).toStrictEqual(itemShape);
+      expect(body).not.toHaveProperty('private_note');
+    });
+    it('returns nothing when non-existent item', async () => {
+      const { status, body } = await request(app.getHttpServer()).get(
+        `/item/${100}`,
+      );
+      expect.assertions(2);
+      expect(status).toBe(200);
+      expect(body).toEqual({});
+    });
+    it('returns item w/ mod info when requested', async () => {
+      const { status, body } = await request(app.getHttpServer()).get(
+        `/item/${1}/?include=true`,
+      );
+      // console.log(body)
+      expect.assertions(3);
+      expect(status).toBe(200);
+      expect(body).toHaveProperty('mods');
+      expect(body.mods).toHaveLength(1);
+    });
+    it('returns item w/o mod info when not requested', async () => {
+      const { status, body } = await request(app.getHttpServer()).get(
+        `/item/${1}/`,
+      );
+      // console.log(body)
+      expect.assertions(2);
+      expect(status).toBe(200);
+      expect(body).not.toHaveProperty('mods');
     });
   });
 
   describe('GET /item', () => {
     it('returns all items', async () => {
       const { status, body } = await request(app.getHttpServer()).get(`/item`);
-      expect.assertions(3);
+      expect.assertions(4);
       expect(status).toBe(200);
       expect(body[0]).toStrictEqual(itemShape);
       expect(body[1]).toStrictEqual(itemShape);
+      expect(body[0]).not.toHaveProperty('private_note');
     });
   });
 
