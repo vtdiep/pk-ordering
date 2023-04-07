@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { ToBooleanFromString } from 'src/utils/transformers/toBooleanFromString';
 import { OnlyPrimitives } from 'src/utils/types/only-primitives';
+import { ItemModInfo } from './item_modinfo.entity';
 
 export abstract class ItemBaseEntity
   implements OnlyPrimitives<Prisma.itemUncheckedCreateInput>
@@ -71,8 +72,9 @@ export class ItemEntity extends ItemBaseEntity {
 
   price?: number | Prisma.Decimal | null;
 
+  @Type(() => ItemModInfo)
   @Expose({ name: 'mods' })
-  item_X_modgroup: item_X_modgroup[];
+  item_X_modgroup?: item_X_modgroup[];
 
   @Exclude()
   private_note?: string | null;
