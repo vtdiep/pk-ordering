@@ -36,6 +36,11 @@ describe('ItemController (e2e)', () => {
     // need to seed item joined tables
     await knex.seed.run({
       directory: './src/common/database/knex/seeds/dev', // relative to knexfile location
+      specific: '02_category.ts',
+    });
+
+    await knex.seed.run({
+      directory: './src/common/database/knex/seeds/dev', // relative to knexfile location
       specific: '03a_category_X_item.ts',
     });
 
