@@ -15,6 +15,10 @@ const config: Config = {
     '.gateway.spec.ts$',
     '.gateway.e2e-spec.ts$',
   ],
+  coverageProvider: 'babel',
+  collectCoverage: true,
+  coverageReporters: ['json', 'lcov', 'text'],
+  coverageDirectory: './coverage/database',
 };
 
 export default config;
