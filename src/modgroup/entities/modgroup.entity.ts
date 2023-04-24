@@ -57,10 +57,10 @@ export abstract class ModgroupBaseEntity
   price?: number | Prisma.Decimal;
 
   @IsString()
-  description?: string;
+  description?: string | null;
 
   @IsString()
-  private_note?: string;
+  private_note?: string | null;
 }
 
 export class Modgroup extends ModgroupBaseEntity {}

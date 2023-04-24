@@ -25,6 +25,16 @@ export class ModgroupService {
     });
   }
 
+  findMany(ids: number[]) {
+    return this.prismaCtx.prisma.modgroup.findMany({
+      where: {
+        mod_id: {
+          in: ids,
+        },
+      },
+    });
+  }
+
   update(id: number, updateModgroupDto: Prisma.modgroupUpdateInput) {
     return this.prismaCtx.prisma.modgroup.update({
       where: {
