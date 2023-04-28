@@ -10,12 +10,15 @@ import {
   ParseArrayPipe,
   UseInterceptors,
   ClassSerializerInterceptor,
+  NotFoundException,
 } from '@nestjs/common';
 import { modgroup } from '@prisma/client';
+import { plainToClass } from 'class-transformer';
 import { ModgroupService } from './modgroup.service';
 import { CreateModgroupDto } from './dto/create-modgroup.dto';
 import { UpdateModgroupDto } from './dto/update-modgroup.dto';
 import { GetModgroupDTO } from './dto/get-modgroup.dto';
+import { Modgroup } from './entities/modgroup.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('modgroup')
@@ -26,7 +29,7 @@ export class ModgroupController {
   async create(@Body() createModgroupDto: CreateModgroupDto) {
     let result: modgroup;
     result = await this.modgroupService.create(createModgroupDto);
-    return result;
+    return plainToClass(Modgroup, result);
   }
 
   // @Get()
@@ -38,9 +41,8 @@ export class ModgroupController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    let result: modgroup | null;
-    result = await this.modgroupService.findOne(+id);
-    if (result == null) return null;
+    let result = await this.modgroupService.findOne(+id);
+    if (result == null) throw new NotFoundException();
     return new GetModgroupDTO(result);
   }
 
@@ -61,13 +63,13 @@ export class ModgroupController {
   ) {
     let result: modgroup;
     result = await this.modgroupService.update(+id, updateModgroupDto);
-    return result;
+    return plainToClass(Modgroup, result);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
     let result: modgroup;
     result = await this.modgroupService.remove(+id);
-    return result;
+    return plainToClass(Modgroup, result);
   }
 }
