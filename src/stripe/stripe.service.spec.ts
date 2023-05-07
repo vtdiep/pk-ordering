@@ -116,6 +116,6 @@ describe('StripeService', () => {
       OrderService.convertToDataDictByItemId(modoptDict),
     );
     console.log(session);
-    expect(session.payment_intent).toBe('pi_1Dsr4b2eZvKYlo2CxVdpVXXb');
+    expect(session.payment_intent).toBe('pi_123');
   });
 });
