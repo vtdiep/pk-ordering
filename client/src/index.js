@@ -9,7 +9,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Error } from './components/Error';
-import { ItemModal } from './components/ItemModal';
+import { ItemModal } from './components/ItemModal/ItemModal';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        path: "item/:name",
+        path: "item/:itemURLIdentifier",
         element: <ItemModal />
       }
     ]
