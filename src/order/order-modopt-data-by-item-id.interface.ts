@@ -1,6 +1,6 @@
 import { OrderModOptDataEntity } from './entities/orderModOptData.entity';
 
-export interface OrderModoptDataDictByItemId {
+export interface OrderModoptDataByItemId {
   [x: number]: OrderModOptDataEntity;
   // intended semantic equivalent
   // [x: OrderModOptDataEntity['item_id']]: OrderModOptDataEntity;

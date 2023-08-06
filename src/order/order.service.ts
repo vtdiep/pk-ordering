@@ -26,7 +26,7 @@ import { ItemError } from './errors/itemError';
 import { ModError } from './errors/modError';
 import { OrderError } from './errors/orderError';
 import { OrderItemDataDict } from './order-item-data-dict.interface';
-import { OrderModoptDataDictByItemId } from './order-modopt-data-dict.interface';
+import { OrderModoptDataByItemId } from './order-modopt-data-by-item-id.interface';
 
 @Injectable()
 export class OrderService {
@@ -37,26 +37,21 @@ export class OrderService {
     private stripeService: StripeService,
   ) {}
 
-  static convertToDataDictByItemId( modOptData: OrderModOptDataEntity[]):OrderModoptDataDictByItemId   { return modOptData.reduce(
+  static createMapByItemId(
+    modOptData: OrderModOptDataEntity[],
+  ): OrderModoptDataByItemId {
+    return modOptData.reduce(
       (acc, val) => ({
         ...acc,
         [val.item_id]: val,
       }),
       {},
-    )}
+    );
+  }
 
   async create(createOrderDto: CreateOrderDto) {
-    let {
-      orderErr,
-      itemDataDictByItemId,
-      modData,
-      modOptData,
-    }: {
-      orderErr: OrderError;
-      itemDataDictByItemId: OrderItemDataDict;
-      modData: OrderModgroupDataEntity;
-      modOptData: OrderModOptDataEntity[];
-    } = await this.validate(createOrderDto);
+    let { orderErr, itemDataByItemId, modData, modOptData } =
+      await this.validate(createOrderDto);
 
     if (orderErr.orderErr.length > 0 || orderErr.itemErrors.length > 0) {
       console.log(orderErr.orderErr);
@@ -64,7 +59,7 @@ export class OrderService {
       throw new BadRequestException('Invalid order');
     }
 
-    let modoptDataDict: OrderModoptDataDictByItemId = modOptData.reduce(
+    let modoptDataByItemId: OrderModoptDataByItemId = modOptData.reduce(
       (acc, val) => ({
         ...acc,
         [val.item_id]: val,
@@ -74,7 +69,7 @@ export class OrderService {
 
     let session = await this.stripeService.createSession(
       createOrderDto,
-      modoptDataDict,
+      modoptDataByItemId,
     );
     if (!session.payment_intent) {
       throw new ServiceUnavailableException();
@@ -82,7 +77,7 @@ export class OrderService {
 
     let storeOrderEntity = new StoreOrderEntity(
       createOrderDto,
-      itemDataDictByItemId,
+      itemDataByItemId,
       modData,
       modOptData,
       String(session.payment_intent),
@@ -100,6 +95,11 @@ export class OrderService {
     return { url: session.url! };
   }
 
+  /**
+   *
+   * @param createOrderDto
+   * @returns
+   */
   private async validate(createOrderDto: CreateOrderDto) {
     let orderErr = new OrderError();
 
@@ -136,7 +136,7 @@ export class OrderService {
       .groupBy('i.item_id')
       .whereIn('i.item_id', requestedItemIds);
     // console.log(itemData)
-    let itemDataDictByItemId: OrderItemDataDict = itemData.reduce(
+    let itemDataByItemId: OrderItemDataDict = itemData.reduce(
       (acc, val) => ({
         ...acc,
         [val.item_id]: val,
@@ -166,24 +166,24 @@ export class OrderService {
       .join('modgroup as m2', 'm2.mod_id', 'mi.mod_id')
       .whereIn('m2.mod_id', requestedModIds);
 
-    let modDataRaw = await this.knex<ModgroupS>('modgroup')
+    let modData = await this.knex<ModgroupS>('modgroup')
       .select('*')
       .whereIn('mod_id', requestedModIds);
 
-    let modData: OrderModgroupDataEntity = {};
+    let modDataByModId: OrderModgroupDataEntity = {};
     // (await this.knex<modgroupS>('modgroup').select('*').whereIn('mod_id', requestedModIds)).forEach(modgroup => {
     //   modData[modgroup.mod_id!] = modgroup
     // })
-    modDataRaw.forEach((modgroup) => {
-      modData[modgroup.mod_id!] = modgroup;
+    modData.forEach((modgroup) => {
+      modDataByModId[modgroup.mod_id!] = modgroup;
     });
 
     // match input id, price to db AND check availability
     let { totalCostOfAllMods, totalPrice } = this.validateItems(
       requestedItems,
-      itemDataDictByItemId,
+      itemDataByItemId,
       orderErr,
-      modData,
+      modDataByModId,
       modOptData,
     );
 
@@ -200,7 +200,7 @@ export class OrderService {
       orderErr.orderErr.push('total price mismatch');
     }
 
-    // verify tax amount
+    // todo: verify tax amount
     // verify valid pickup time
     let pickupTime =
       typeof createOrderDto.pickup_time === 'string'
@@ -216,13 +216,18 @@ export class OrderService {
       );
       orderErr.orderErr.push('pickup_time too far in the past');
     }
-    return { orderErr, itemDataDictByItemId, modData, modOptData };
+    return {
+      orderErr,
+      itemDataByItemId,
+      modData: modDataByModId,
+      modOptData,
+    };
   }
 
   /**
    *
    * @param requestedItems
-   * @param itemDataDictByItemId
+   * @param itemDataByItemId
    * @param orderErr Mutable; Encountered errors are stored here
    * @param modData
    * @param modOptData
@@ -232,42 +237,45 @@ export class OrderService {
    */
   private validateItems(
     requestedItems: OrderDetailItemDto[],
-    itemDataDictByItemId: OrderItemDataDict,
+    itemDataByItemId: OrderItemDataDict,
     orderErr: OrderError,
     modData: OrderModgroupDataEntity,
     modOptData: OrderModOptDataEntity[],
   ): { totalCostOfAllMods: number; totalPrice: number } {
     let totalCostOfAllMods: number = 0;
     let totalPrice: number = 0;
-    requestedItems.forEach((requestedItem, index) => {
+    requestedItems.forEach((requestedItem, indexOfRequestedItem) => {
       let itemPriceWithMods = 0;
-      let itemAvailable = false;
+      let itemData = itemDataByItemId[requestedItem.id];
 
       // check the item id is available
-      if (!itemDataDictByItemId[requestedItem.id]?.item_active) {
+      if (!itemData?.item_active) {
         orderErr.itemErrors.push(
-          new ItemError(index, requestedItem.id, requestedItem.name, [
-            'item not available',
-          ]),
+          new ItemError(
+            indexOfRequestedItem,
+            requestedItem.id,
+            requestedItem.name,
+            ['item not available'],
+          ),
         );
         console.log('item not available');
         return;
       }
 
       // check item price is correct
-      if (
-        Number(itemDataDictByItemId[requestedItem.id].item_price) !==
-        requestedItem.price
-      ) {
+      if (Number(itemData.item_price) !== requestedItem.price) {
         console.log(
           `expected ${requestedItem.price} but got ${Number(
-            itemDataDictByItemId[requestedItem.id].item_price,
+            itemData.item_price,
           )}`,
         );
         orderErr.itemErrors.push(
-          new ItemError(index, requestedItem.id, requestedItem.name, [
-            'item price mismatch',
-          ]),
+          new ItemError(
+            indexOfRequestedItem,
+            requestedItem.id,
+            requestedItem.name,
+            ['item price mismatch'],
+          ),
         );
         return;
       }
@@ -278,9 +286,7 @@ export class OrderService {
       let requestedMods = requestedItem.mods;
       if (requestedMods === undefined || requestedMods.length < 1) {
         // skip mod price calculation
-        itemPriceWithMods = Number(
-          itemDataDictByItemId[requestedItem.id]?.item_price,
-        );
+        itemPriceWithMods = Number(itemData?.item_price);
         totalPrice += itemPriceWithMods * requestedItem.quantity;
         return;
       }
@@ -292,12 +298,15 @@ export class OrderService {
         .forEach((id) => {
           if (modgroupIdMap.has(id)) {
             orderErr.itemErrors.push(
-              new ItemError(index, requestedItem.id, requestedItem.name, [
-                'duplicate modgroup detected for item',
-              ]),
+              new ItemError(
+                indexOfRequestedItem,
+                requestedItem.id,
+                requestedItem.name,
+                ['duplicate modgroup detected for item'],
+              ),
             );
             console.log(
-              `duplicate modgroup ${id} in order @ item#${index} item_id:${requestedItem.id}`,
+              `duplicate modgroup ${id} in order @ item#${indexOfRequestedItem} item_id:${requestedItem.id}`,
             );
           } else {
             modgroupIdMap.set(id, true);
@@ -305,14 +314,17 @@ export class OrderService {
         });
 
       let requestedModsAreValid = requestedMods.every((requestedMod) =>
-        itemDataDictByItemId[requestedItem.id].mods.includes(requestedMod.id),
+        itemData.mods.includes(requestedMod.id),
       );
       if (!requestedModsAreValid) {
         // console.log(`invalid modgroup for item ${requestedItem.name}`);
         orderErr.itemErrors.push(
-          new ItemError(index, requestedItem.id, requestedItem.name, [
-            'one or more item modifiers not available',
-          ]),
+          new ItemError(
+            indexOfRequestedItem,
+            requestedItem.id,
+            requestedItem.name,
+            ['one or more item modifiers not available'],
+          ),
         );
         return;
       }
@@ -323,13 +335,13 @@ export class OrderService {
         requestedMods,
         modData,
         modOptData,
-        itemDataDictByItemId,
+        itemDataByItemId,
       );
 
       if (modErrors.length > 0) {
         orderErr.itemErrors.push(
           new ItemError(
-            index,
+            indexOfRequestedItem,
             requestedItem.id,
             requestedItem.name,
             [],
@@ -340,9 +352,7 @@ export class OrderService {
       }
       console.log(modsCostForItem);
       totalCostOfAllMods += modsCostForItem;
-      itemPriceWithMods =
-        Number(itemDataDictByItemId[requestedItem.id]?.item_price) +
-        modsCostForItem;
+      itemPriceWithMods = Number(itemData?.item_price) + modsCostForItem;
       totalPrice += itemPriceWithMods * requestedItem.quantity;
     });
     return { totalCostOfAllMods, totalPrice };
@@ -383,7 +393,7 @@ export class OrderService {
  * @param requestedMods
  * @param modgroupData
  * @param modOptData
- * @param itemDataDictByItemId
+ * @param itemDataByItemId
  * @returns
  * modsCostForItem = total cost of all modgroups for this item
  *
@@ -393,7 +403,7 @@ function checkRequestedMods(
   requestedMods: OrderDetailModDto[],
   modgroupData: OrderModgroupDataEntity,
   modOptData: OrderModOptDataEntity[],
-  itemDataDictByItemId: OrderItemDataDict,
+  itemDataByItemId: OrderItemDataDict,
 ): { modsCostForItem: number; modErrors: ModError[] } {
   let modsCostForItem: number = 0;
 
@@ -483,7 +493,7 @@ function checkRequestedMods(
             data.mod_id === requestedModId && data.item_id === Number(key),
         )?.modopt_price ??
         modgroupData[requestedModId].price ??
-        itemDataDictByItemId[key].item_price;
+        itemDataByItemId[key].item_price;
 
       for (let i = 0; i < modOptCount[key]; i++) {
         modOptCosts.push(Number(singleModOptCost));

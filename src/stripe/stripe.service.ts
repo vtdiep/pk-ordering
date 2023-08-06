@@ -4,13 +4,13 @@ import { Response } from 'express';
 import { chain } from 'lodash';
 import { STRIPE_CLIENT } from 'src/common/constants';
 import { CreateOrderDto } from 'src/order/dto/create-order.dto';
-import { OrderModoptDataDictByItemId } from 'src/order/order-modopt-data-dict.interface';
+import { OrderModoptDataByItemId } from 'src/order/order-modopt-data-by-item-id.interface';
 import Stripe from 'stripe';
 
 @Injectable()
 export class StripeService {
   constructor(@Inject(STRIPE_CLIENT) private client: Stripe) {
-    this.stripe = this.client
+    this.stripe = this.client;
   }
   // constructor(private configService: ConfigService) {}
 
@@ -30,7 +30,7 @@ export class StripeService {
   // metadata: You can specify up to 50 keys, with key names up to 40 characters long and values up to 500 characters long.
   async createSession(
     order: CreateOrderDto,
-    modoptDataDict: OrderModoptDataDictByItemId,
+    modoptDataDict: OrderModoptDataByItemId,
     metadata: Stripe.MetadataParam = {},
   ) {
     // parse order into line items
