@@ -113,7 +113,7 @@ describe('StripeService', () => {
 
     let session = await stripe.createSession(
       orderDTO,
-      OrderService.createMapByItemId(modoptDict),
+      OrderService.createMappingByKey(modoptDict,"item_id"),
     );
     console.log(session);
     expect(session.payment_intent).toBe('pi_123');

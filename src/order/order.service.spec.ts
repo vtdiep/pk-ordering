@@ -329,7 +329,8 @@ describe('OrderService', () => {
     mockCtx.prisma.order.create.mockResolvedValue({
       oid: 1,
     } as Partial<order> as order);
-    await expect(service.create(orderDTO)).rejects.toThrowError();
+    
+    await expect( service.create(orderDTO)).rejects.toThrow()
   });
 
   it('should throw when a submitted item price is incorrect', async () => {
