@@ -10,6 +10,7 @@ import { makeMockOrder } from 'src/order/fixtures/mockData';
 import { OrderService } from 'src/order/order.service';
 import { StoreConfirmationGateway } from 'src/store-confirmation/store-confirmation.gateway';
 import Stripe from 'stripe';
+import { createMappingByKey } from 'src/order/order-validation';
 import { StripeService } from './stripe.service';
 
 describe('StripeService', () => {
@@ -113,7 +114,7 @@ describe('StripeService', () => {
 
     let session = await stripe.createSession(
       orderDTO,
-      OrderService.createMappingByKey(modoptDict,"item_id"),
+      createMappingByKey(modoptDict, 'item_id'),
     );
     console.log(session);
     expect(session.payment_intent).toBe('pi_123');
